@@ -19,7 +19,7 @@ public class Game : MonoBehaviour {
 	private void Start () {
         Vector3 startingPos = s2_0.transform.position;
         player.transform.SetPositionAndRotation(
-            new Vector3(startingPos.x, startingPos.y + 2.5F, startingPos.z),
+            new Vector3(startingPos.x, startingPos.y + 0.2F, startingPos.z),
             player.transform.rotation
         );
         FocusPlayer();
@@ -28,7 +28,7 @@ public class Game : MonoBehaviour {
     void FocusPlayer() {
         Vector3 playerPos =player.transform.position;
         playerCamera.transform.SetPositionAndRotation(
-            new Vector3(playerPos.x, playerPos.y + 5F, playerPos.z - 10F),
+            new Vector3(playerPos.x, playerPos.y + 7F, playerPos.z - 10F),
             playerCamera.transform.rotation
         );
     }
