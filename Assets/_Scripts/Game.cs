@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 public class Game : MonoBehaviour {
 
-    private static float GRID_OFFSET_X = 100F;
-    private static float GRID_OFFSET_Y = 3.2F;
-    private static float GRID_OFFSET_Z = 50F;
+    private float GRID_OFFSET_X = 100F;
+    private float GRID_OFFSET_Y = 3.2F;
+    private float GRID_OFFSET_Z = 50F;
 
     public GameObject playerCamera;
     public GameObject player;
@@ -26,13 +26,17 @@ public class Game : MonoBehaviour {
         s18_5, s18_6, s18_7;
     private List<Edge> edges;
     private bool rollingDice;
-    private int currentRole;
+    private int currentRoll;
+
+    private Space currentSpace;
+    private List<Space> currentSpaceOptions;
 
 	// Use this for initialization
 	private void Start () {
         InitSpaces();
         InitEdges();
-        Vector3 startingPos = s14_1.position;
+        currentSpace = s14_1;
+        Vector3 startingPos = currentSpace.position;
         player.transform.SetPositionAndRotation(
             new Vector3(startingPos.x, startingPos.y + 0.2F, startingPos.z),
             player.transform.rotation
@@ -83,8 +87,8 @@ public class Game : MonoBehaviour {
     public void StopRollingDice() {
         rollingDice = false;
         stopRollButton.SetActive(false);
-        currentRole = (int)Mathf.Floor(UnityEngine.Random.value * 6) + 1;
-        diceDisplay.text = currentRole + "";
+        currentRoll = (int)Mathf.Floor(UnityEngine.Random.value * 6) + 1;
+        diceDisplay.text = currentRoll + "";
         StartCoroutine(PromptForMovement());
     }
 
@@ -99,10 +103,52 @@ public class Game : MonoBehaviour {
             diceDisplay.transform.position = Vector3.Slerp(startPos, endPos, fracComplete);
             yield return new WaitForSeconds(0.00001F);
         }
+        HighlightSpaces();
     }
 
     void HighlightSpaces() {
-        
+        string toLog = "Roll: " + currentRoll + "\n";
+        List<List<Space>> paths = HighlightSpaces(currentSpace, currentRoll, currentSpace, new List<Space>(), new SortedDictionary<string, bool>());
+        //I should pass currentRolL instead of store it globally
+        foreach(List<Space> path in paths) {
+            foreach(Space space in path) {
+                toLog = toLog + space.ToString() + ", ";
+            }
+            Debug.Log(toLog);
+            toLog = "";
+        }
+        Debug.Log("Count: " + paths.Count + "\n" + toLog);
+    }
+
+    //TODO check to see if an edge case I'm not catching is when you can come at the same space from different directions for the same amount
+    List<List<Space>> HighlightSpaces(Space location, int steps, Space previous, List<Space> endpoints, SortedDictionary<string, bool> checkedSteps) {
+        List<List<Space>> paths = new List<List<Space>>();
+        if(steps == 0) {
+            if(endpoints.IndexOf(location) == -1) {
+                endpoints.Add(location);
+                List<Space> newList = new List<Space>();
+                newList.Add(location);
+                paths.Add(newList);
+            }
+        } else {
+            Space otherSpace;
+            //TODO: reduce all of the toStrings in here to one
+            foreach(Edge edge in location.edges) {
+                otherSpace = edge.GetOther(location);
+                //checked steps ensures that only one branch of previous -> tile at n steps will be explored
+                if(otherSpace != previous && !checkedSteps.ContainsKey(previous.ToString() + "-" + otherSpace.ToString() + "-" + steps)) {
+                    checkedSteps.Add(previous.ToString() + "-" + otherSpace.ToString() + "-" + steps, true);
+                    foreach(List<Space> path in HighlightSpaces(otherSpace, steps - 1, location, endpoints, checkedSteps)) {
+                        if(path.Count > 0) {
+                            path.Insert(0, location);
+                            paths.Add(path);
+                        }
+                    };
+                }
+            }
+        }
+        this.currentSpaceOptions = endpoints;
+        return paths;
     }
 
     void InitSpaces() {
@@ -171,6 +217,10 @@ public class Game : MonoBehaviour {
         public Space(Vector3 position) {
             this.position = position;
         }
+
+        public string ToString() {
+            return (position.x - 100F) + "_" + (position.z - 50F);
+        }
     }
 
     private class Edge {
@@ -181,6 +231,20 @@ public class Game : MonoBehaviour {
             this.b = b;
             a.edges.Add(this);
             b.edges.Add(this);
+        }
+
+        public Space GetOther(Space space) {
+            Space other;
+            if(space == a) {
+                other = b;
+            } else {
+                other = a;
+            }
+            return other;
+        }
+
+        public bool Equals(Space other) {
+            return this.ToString() == other.ToString();
         }
     }
 }
