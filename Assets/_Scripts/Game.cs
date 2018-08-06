@@ -4,20 +4,32 @@ using System.Collections;
 
 public class Game : MonoBehaviour {
 
+    private static float GRID_OFFSET_X = 100F;
+    private static float GRID_OFFSET_Y = 3.2F;
+    private static float GRID_OFFSET_Z = 50F;
+
     public GameObject playerCamera;
     public GameObject player;
-    public GameObject s0_1, s0_2, s0_3, s1_1, s1_3, s1_4, s2_0, s2_1, s2_2, s2_3, s3_2, s3_3, s3_4;
     public GameObject turnMenu;
     public Text diceDisplay;
     public GameObject stopRollButton;
     public GameObject diceRollContainer;
+    public GameObject spaces;
 
+    private Space s10_5, s10_7,
+        s11_7, s11_8,
+        s12_2, s12_3,
+        s13_3, s13_8,
+        s14_1, s14_2, s14_3, s14_4, s14_8, s14_10,
+        s16_2, s16_4, s16_5, s16_7, s16_8, s16_10,
+        s18_5, s18_6, s18_7;
     private bool rollingDice;
     private int currentRole;
 
 	// Use this for initialization
 	private void Start () {
-        Vector3 startingPos = s2_0.transform.position;
+        InitSpaces();
+        Vector3 startingPos = s14_1.position;
         player.transform.SetPositionAndRotation(
             new Vector3(startingPos.x, startingPos.y + 0.2F, startingPos.z),
             player.transform.rotation
@@ -86,4 +98,34 @@ public class Game : MonoBehaviour {
         }
     }
 
+    void InitSpaces() {}
+
+
+    private class Space {
+        public readonly Vector3 position;
+        private Edge[] edges;
+
+        Space(Vector3 position) {
+            this.position = position;
+        }
+
+        void SetEdges(Edge[] edges){
+            this.edges = edges;
+        }
+
+        Edge[] getEdges() {
+            return this.edges;
+        }
+    }
+
+    private class Edge {
+        public readonly Space a, b;
+        public readonly bool oneWay;
+
+        Edge(Space a, Space b, bool oneWay) {
+            this.a = a;
+            this.b = b;
+            this.oneWay = oneWay;
+        }
+    }
 }
