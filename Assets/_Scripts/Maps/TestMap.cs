@@ -9,6 +9,7 @@ public class TestMap {
 
     public TestMap(GameObject spacesObject) {
         initSpaces(spacesObject);
+        initEdges();
     }
 
     void initSpaces(GameObject spacesObject) {

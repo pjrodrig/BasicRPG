@@ -9,21 +9,23 @@ public class Game : MonoBehaviour {
     private float GRID_OFFSET_Y = 3.2F;
     private float GRID_OFFSET_Z = 50F;
 
-    public GameObject playerCamera;
+    public Camera playerCamera;
     public GameObject player;
     public GameObject turnMenu;
     public Text diceDisplay;
     public GameObject stopRollButton;
     public GameObject diceRollContainer;
     public GameObject spacesObject;
+    public GameObject spaceHighlight;
+    public GameObject spacePointer;
 
     private bool rollingDice;
-
+    private bool choosingSpace;
+    private SortedDictionary<string, List<Space>> pathOptions;
     private TestMap map;
     private Space currentSpace;
 
-	// Use this for initialization
-	private void Start () {
+	void Start() {
         this.map = new TestMap(spacesObject);
         this.currentSpace = this.map.GetStart();
         Vector3 startingPos = this.currentSpace.position;
@@ -33,6 +35,12 @@ public class Game : MonoBehaviour {
         );
         FocusPlayer();
 	}
+
+    void Update() {
+        if(choosingSpace) {
+            SpaceClickCheck();
+        }
+    }
 
     void FocusPlayer() {
         Vector3 playerPos =player.transform.position;
@@ -134,11 +142,76 @@ public class Game : MonoBehaviour {
         return paths;
     }
 
-    SortedDictionary<string, GameObject> HighlightSpaces(List<List<Space>> paths) {
-        SortedDictionary<string, GameObject> highlights = new SortedDictionary<string, GameObject>();
+    void HighlightSpaces(List<List<Space>> paths) {
+        this.choosingSpace = true;
+        Quaternion rotation = new Quaternion(0, 0, 0, 0);
+        Vector3 highlightOffset = new Vector3(0, -0.01F, 0);
+        Vector3 pointerOffset = new Vector3(0, 7F, 0);
+        Vector3 pos;
+        this.pathOptions = new SortedDictionary<string, List<Space>>();
         foreach(List<Space> path in paths) {
-
+            pos = path[path.Count - 1].position;
+            pathOptions.Add(pos.x + "_" + pos.y, path);
+            StartCoroutine(SpaceHighlightPulse(Instantiate(this.spaceHighlight, pos + highlightOffset, rotation)));
+            StartCoroutine(SpacePointerBob(Instantiate(this.spacePointer, pos + pointerOffset, rotation)));
         }
-        return highlights;
+    }
+
+    IEnumerator SpaceHighlightPulse(GameObject spaceHighlight) {
+        spaceHighlight.SetActive(true);
+        bool grow = true;
+        int count = 0;
+        while(choosingSpace) {
+            count++;
+            if(grow) {
+                spaceHighlight.transform.localScale += new Vector3(0.02F, 0, 0.02F);
+            } else {
+                spaceHighlight.transform.localScale += new Vector3(-0.02F, 0, -0.02F);
+            }
+            if (count == 50) {
+                count = 0;
+                grow = !grow;
+            }
+            yield return new WaitForSeconds(0.01F);
+        }
+        Destroy(spaceHighlight);
+    }
+
+    IEnumerator SpacePointerBob(GameObject spacePointer) {
+        spacePointer.SetActive(true);
+        Quaternion rotation = new Quaternion(0, 0, 0, 0);
+        bool rise = true;
+        int count = 0;
+        while(choosingSpace) {
+            count++;
+            if(rise) {
+                spacePointer.transform.SetPositionAndRotation(spacePointer.transform.position + new Vector3(0, 0.025F, 0), rotation);
+            } else {
+                spacePointer.transform.SetPositionAndRotation(spacePointer.transform.position + new Vector3(0, -0.025F, 0), rotation);
+            }
+            if(count == 50) {
+                count = 0;
+                rise = !rise;
+            }
+            yield return new WaitForSeconds(0.01F);
+        }
+        Destroy(spacePointer);
+    }
+
+    void SpaceClickCheck() {
+        if (Input.GetMouseButtonDown(0)){
+            Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit)){
+                List<Space> path;
+                Vector3 hitPos = hit.transform.position;
+                pathOptions.TryGetValue(hitPos.x + "_" + hitPos.z, out path);
+                this.choosingSpace = false;
+            }
+        }
+    }
+
+    void MovePlayer(List<Space> path) {
+        //TODO: implement player movement
     }
 }
