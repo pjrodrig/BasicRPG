@@ -17,26 +17,16 @@ public class Game : MonoBehaviour {
     public GameObject diceRollContainer;
     public GameObject spacesObject;
 
-    private Space s10_5, s10_7,
-        s11_7, s11_8,
-        s12_2, s12_3, s12_5,
-        s13_3, s13_8,
-        s14_1, s14_2, s14_3, s14_4, s14_8, s14_10,
-        s16_2, s16_4, s16_5, s16_7, s16_8, s16_10,
-        s18_5, s18_6, s18_7;
-    private List<Edge> edges;
     private bool rollingDice;
-    private int currentRoll;
 
+    private TestMap map;
     private Space currentSpace;
-    private List<Space> currentSpaceOptions;
 
 	// Use this for initialization
 	private void Start () {
-        InitSpaces();
-        InitEdges();
-        currentSpace = s14_1;
-        Vector3 startingPos = currentSpace.position;
+        this.map = new TestMap(spacesObject);
+        this.currentSpace = this.map.GetStart();
+        Vector3 startingPos = this.currentSpace.position;
         player.transform.SetPositionAndRotation(
             new Vector3(startingPos.x, startingPos.y + 0.2F, startingPos.z),
             player.transform.rotation
@@ -87,12 +77,12 @@ public class Game : MonoBehaviour {
     public void StopRollingDice() {
         rollingDice = false;
         stopRollButton.SetActive(false);
-        currentRoll = (int)Mathf.Floor(UnityEngine.Random.value * 6) + 1;
+        int currentRoll = (int)Mathf.Floor(UnityEngine.Random.value * 6) + 1;
         diceDisplay.text = currentRoll + "";
-        StartCoroutine(PromptForMovement());
+        StartCoroutine(PromptForMovement(currentRoll));
     }
 
-    IEnumerator PromptForMovement() {
+    IEnumerator PromptForMovement(int currentRoll) {
         yield return new WaitForSeconds(1F);
         Vector3 startPos = diceDisplay.transform.position;
         Vector3 endPos = new Vector3(420, 200, 0) + startPos;
@@ -103,25 +93,17 @@ public class Game : MonoBehaviour {
             diceDisplay.transform.position = Vector3.Slerp(startPos, endPos, fracComplete);
             yield return new WaitForSeconds(0.00001F);
         }
-        HighlightSpaces();
+        HighlightSpaces(FindPaths(currentRoll));
     }
 
-    void HighlightSpaces() {
-        string toLog = "Roll: " + currentRoll + "\n";
-        List<List<Space>> paths = HighlightSpaces(currentSpace, currentRoll, currentSpace, new List<Space>(), new SortedDictionary<string, bool>());
-        //I should pass currentRolL instead of store it globally
-        foreach(List<Space> path in paths) {
-            foreach(Space space in path) {
-                toLog = toLog + space.ToString() + ", ";
-            }
-            Debug.Log(toLog);
-            toLog = "";
-        }
-        Debug.Log("Count: " + paths.Count + "\n" + toLog);
+    List<List<Space>> FindPaths(int currentRoll) {
+        return FindPaths(this.currentSpace, currentRoll, currentSpace,
+            new List<Space>(), new SortedDictionary<string, bool>());
     }
 
-    //TODO check to see if an edge case I'm not catching is when you can come at the same space from different directions for the same amount
-    List<List<Space>> HighlightSpaces(Space location, int steps, Space previous, List<Space> endpoints, SortedDictionary<string, bool> checkedSteps) {
+    //TODO: break up this method
+    List<List<Space>> FindPaths(Space location, int steps, Space previous, List<Space>
+        endpoints, SortedDictionary<string, bool> checkedSteps) {
         List<List<Space>> paths = new List<List<Space>>();
         if(steps == 0) {
             if(endpoints.IndexOf(location) == -1) {
@@ -132,13 +114,15 @@ public class Game : MonoBehaviour {
             }
         } else {
             Space otherSpace;
+            string key;
             //TODO: reduce all of the toStrings in here to one
             foreach(Edge edge in location.edges) {
                 otherSpace = edge.GetOther(location);
-                //checked steps ensures that only one branch of previous -> tile at n steps will be explored
-                if(otherSpace != previous && !checkedSteps.ContainsKey(previous.ToString() + "-" + otherSpace.ToString() + "-" + steps)) {
-                    checkedSteps.Add(previous.ToString() + "-" + otherSpace.ToString() + "-" + steps, true);
-                    foreach(List<Space> path in HighlightSpaces(otherSpace, steps - 1, location, endpoints, checkedSteps)) {
+                key = previous.ToString() + "-" + otherSpace.ToString() + "-" + steps;
+                //checked steps ensures that only one branch of previous -> otherSpace at n steps will be explored
+                if(otherSpace != previous && !checkedSteps.ContainsKey(key)) {
+                    checkedSteps.Add(key, true);
+                    foreach(List<Space> path in FindPaths(otherSpace, steps - 1, location, endpoints, checkedSteps)) {
                         if(path.Count > 0) {
                             path.Insert(0, location);
                             paths.Add(path);
@@ -147,104 +131,14 @@ public class Game : MonoBehaviour {
                 }
             }
         }
-        this.currentSpaceOptions = endpoints;
         return paths;
     }
 
-    void InitSpaces() {
-            this.s10_5 = new Space(spacesObject.transform.Find("s10_5").transform.position);
-            this.s10_7 = new Space(spacesObject.transform.Find("s10_7").transform.position);
-            this.s11_7 = new Space(spacesObject.transform.Find("s11_7").transform.position);
-            this.s11_8 = new Space(spacesObject.transform.Find("s11_8").transform.position);
-            this.s12_2 = new Space(spacesObject.transform.Find("s12_2").transform.position);
-            this.s12_3 = new Space(spacesObject.transform.Find("s12_3").transform.position);
-            this.s12_5 = new Space(spacesObject.transform.Find("s12_5").transform.position);
-            this.s13_3 = new Space(spacesObject.transform.Find("s13_3").transform.position);
-            this.s13_8 = new Space(spacesObject.transform.Find("s13_8").transform.position);
-            this.s14_1 = new Space(spacesObject.transform.Find("s14_1").transform.position);
-            this.s14_2 = new Space(spacesObject.transform.Find("s14_2").transform.position);
-            this.s14_3 = new Space(spacesObject.transform.Find("s14_3").transform.position);
-            this.s14_4 = new Space(spacesObject.transform.Find("s14_4").transform.position);
-            this.s14_8 = new Space(spacesObject.transform.Find("s14_8").transform.position);
-            this.s14_10 = new Space(spacesObject.transform.Find("s14_10").transform.position);
-            this.s16_2 = new Space(spacesObject.transform.Find("s16_2").transform.position);
-            this.s16_4 = new Space(spacesObject.transform.Find("s16_4").transform.position);
-            this.s16_5 = new Space(spacesObject.transform.Find("s16_5").transform.position);
-            this.s16_7 = new Space(spacesObject.transform.Find("s16_7").transform.position);
-            this.s16_8 = new Space(spacesObject.transform.Find("s16_8").transform.position);
-            this.s16_10 = new Space(spacesObject.transform.Find("s16_10").transform.position);
-            this.s18_5 = new Space(spacesObject.transform.Find("s18_5").transform.position);
-            this.s18_6 = new Space(spacesObject.transform.Find("s18_6").transform.position);
-            this.s18_7 = new Space(spacesObject.transform.Find("s18_7").transform.position);
-    }
+    SortedDictionary<string, GameObject> HighlightSpaces(List<List<Space>> paths) {
+        SortedDictionary<string, GameObject> highlights = new SortedDictionary<string, GameObject>();
+        foreach(List<Space> path in paths) {
 
-    void InitEdges() {
-        this.edges = new List<Edge>();
-        this.edges.Add(new Edge(s10_5, s10_7));
-        this.edges.Add(new Edge(s10_5, s12_5));
-        this.edges.Add(new Edge(s10_7, s11_7));
-        this.edges.Add(new Edge(s11_7, s11_8));
-        this.edges.Add(new Edge(s11_8, s13_8));
-        this.edges.Add(new Edge(s12_2, s12_3));
-        this.edges.Add(new Edge(s12_2, s14_2));
-        this.edges.Add(new Edge(s12_3, s12_5));
-        this.edges.Add(new Edge(s12_3, s13_3));
-        this.edges.Add(new Edge(s13_3, s14_3));
-        this.edges.Add(new Edge(s13_8, s14_8));
-        this.edges.Add(new Edge(s14_1, s14_2));
-        this.edges.Add(new Edge(s14_2, s14_3));
-        this.edges.Add(new Edge(s14_2, s16_2));
-        this.edges.Add(new Edge(s14_3, s14_4));
-        this.edges.Add(new Edge(s14_4, s16_4));
-        this.edges.Add(new Edge(s14_8, s14_10));
-        this.edges.Add(new Edge(s14_8, s16_8));
-        this.edges.Add(new Edge(s14_10, s16_10));
-        this.edges.Add(new Edge(s16_2, s16_4));
-        this.edges.Add(new Edge(s16_4, s16_5));
-        this.edges.Add(new Edge(s16_5, s16_7));
-        this.edges.Add(new Edge(s16_5, s18_5));
-        this.edges.Add(new Edge(s16_7, s16_8));
-        this.edges.Add(new Edge(s16_7, s18_7));
-        this.edges.Add(new Edge(s16_8, s16_10));
-        this.edges.Add(new Edge(s18_5, s18_6));
-        this.edges.Add(new Edge(s18_6, s18_7));
-    }
-
-    private class Space {
-        public readonly Vector3 position;
-        public readonly List<Edge> edges = new List<Edge>();
-
-        public Space(Vector3 position) {
-            this.position = position;
         }
-
-        public string ToString() {
-            return (position.x - 100F) + "_" + (position.z - 50F);
-        }
-    }
-
-    private class Edge {
-        public readonly Space a, b;
-
-        public Edge(Space a, Space b) {
-            this.a = a;
-            this.b = b;
-            a.edges.Add(this);
-            b.edges.Add(this);
-        }
-
-        public Space GetOther(Space space) {
-            Space other;
-            if(space == a) {
-                other = b;
-            } else {
-                other = a;
-            }
-            return other;
-        }
-
-        public bool Equals(Space other) {
-            return this.ToString() == other.ToString();
-        }
+        return highlights;
     }
 }
