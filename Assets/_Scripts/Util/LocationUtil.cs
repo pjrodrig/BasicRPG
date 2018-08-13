@@ -3,6 +3,8 @@ using System.Collections;
 
 public class LocationUtil {
 
+    private static readonly float WAIT_CONSTANT = 0.00001F;
+
     /**
     Rotates a transform to face a direction over a specified time
     @param transform - Transform to rotate
@@ -22,10 +24,23 @@ public class LocationUtil {
         float startTime = Time.time;
         float fracComplete = 0;
         while(fracComplete < 1) {
-            fracComplete = (Time.time - startTime) / 0.5F; //replace this with milliseconds calculation
-            transform.rotation = Quaternion.Slerp(transform.rotation, direction, fracComplete);
-            yield return new WaitForSeconds(0.00001F);
+            fracComplete = (Time.time - startTime) / 0.5F; //TODO: replace this with milliseconds calculation
+            transform.rotation = Quaternion.Slerp(transform.rotation, direction, fracComplete);//TODO: this should probably be Lerp
+            yield return new WaitForSeconds(WAIT_CONSTANT);
         }
+    }
+
+    public static IEnumerator SlerpVector(Transform transform, Vector3 endPos, float milliseconds) {
+        Debug.Log("start: " + Time.time);
+        Vector3 startPos = transform.position;
+        float startTime = Time.time;
+        float fracComplete = 0;
+        while(fracComplete < 1) {
+            fracComplete = (Time.time - startTime) / 0.5F;//TODO: replace this with milliseconds calculation
+            transform.position = Vector3.Slerp(startPos, endPos, fracComplete);
+            yield return new WaitForSeconds(WAIT_CONSTANT);
+        }
+        Debug.Log("end: " + Time.time);
     }
 
 }

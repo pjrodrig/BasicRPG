@@ -20,7 +20,7 @@ public class GameCamera : MonoBehaviour {
         StartCoroutine(FocusMap());
     }
 
-    IEnumerator FocusMap() {
+    public IEnumerator FocusMap() {
         Vector3 startPos = GetComponent<Camera>().transform.position;
         Vector3 endPos = new Vector3(0, 10, -10) + startPos;
         float startTime = Time.time;
