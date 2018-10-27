@@ -1,4 +1,18 @@
 Grid: 0 starts at x: 100, z: 50
 
 
-Pokemon final four-esk battle which requires the player to be well rounded in attack, magic, speed, and defense
+Final four-esk battle which requires the player to be well rounded in attack, magic, speed, and defense
+
+
+
+game: {
+  players: []
+
+  startTurns: {
+    loopPlayers: {
+      playerTurn: {
+        
+      }
+    }
+  }
+}

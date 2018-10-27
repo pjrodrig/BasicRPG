@@ -1,0 +1,5 @@
+public Combatant {
+    public Combatant() {
+
+    }
+}

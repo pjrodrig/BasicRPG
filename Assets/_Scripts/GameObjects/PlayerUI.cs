@@ -64,7 +64,7 @@ public class PlayerUI : MonoBehaviour {
 
     void DiceRoll_Stop() {
         this.rollingDice = false;
-        int roll = (int)Mathf.Floor(UnityEngine.Random.value * 6) + 1;
+        int roll = Random.Range(1, 6);
         this.diceRoll_display.text = roll + "";
         this.diceRoll_buttons.SetActive(false);
         StartCoroutine(TransformDiceDisplay(roll));
@@ -81,7 +81,7 @@ public class PlayerUI : MonoBehaviour {
         float last = 0;
         float randomNumber;
         while(this.rollingDice) {
-            while(this.rollingDice && (randomNumber = Mathf.Floor(UnityEngine.Random.value * 6) + 1) != last) {
+            while(this.rollingDice && (randomNumber = Random.Range(1, 6)) != last) {
                 last = randomNumber;
                 this.diceRoll_display.text = randomNumber + "";
                 yield return new WaitForSeconds(0.05F);

@@ -1,8 +1,9 @@
 using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour, Combatant {
 
     private readonly Quaternion TO_CAMERA = Quaternion.LookRotation(Vector3.back);
 
@@ -24,12 +25,12 @@ public class Player : MonoBehaviour {
         return this.space;
     }
 
-    public void TraversePath(List<Space> path) {
-        StartCoroutine(Walk(path));
+    public void TraversePath(List<Space> path, Action callback) {
+        StartCoroutine(Walk(path, callback));
     }
 
     //TODO: break up this method
-    IEnumerator Walk(List<Space> path) {
+    IEnumerator Walk(List<Space> path, Action callback) {
         playerCamera.FocusPosition(space.position);
         Vector3 offset = new Vector3(0, 0.2F, 0);
         Vector3 startPos = Vector3.zero;
@@ -60,6 +61,6 @@ public class Player : MonoBehaviour {
         }
         StartCoroutine(LocationUtil.RotateToDirection(go.transform, TO_CAMERA, 3F));
         this.space = path[path.Count - 1];
-        //TODO callback?
+        callback(this.space);
     }
 }

@@ -54,4 +54,7 @@ public class Game : MonoBehaviour {
         this.turnManager.TakeTurns();
     }
 
+    public void EndRound() {
+        StartRound();
+    }
 }

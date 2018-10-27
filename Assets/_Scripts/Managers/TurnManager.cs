@@ -12,7 +12,7 @@ public class TurnManager {
     private bool cameraIsMoveable = false;
     private bool rollingDice = false;
     private bool choosingSpace = false;
-    private Player currentPlayer = null;
+    private int currentPlayer;
 
     private SortedDictionary<string, List<Space>> pathOptions;
 
@@ -25,24 +25,36 @@ public class TurnManager {
     }
 
     public void Update() {
-        if(cameraIsMoveable) {
+        if(this.choosingSpace || this.looking) {
             CameraMovementCheck();
         }
-        if(choosingSpace) {
+        if(this.choosingSpace) {
             SpaceClickCheck();
         }
     }
 
     public void TakeTurns() {
-        // foreach(Player player in this.players) {
-        //     TakeTurn(player);
-        // }
-        TakeTurn(this.players[0]);
+        currentPlayer = -1;
+        TakeTurn();
     }
 
-    void TakeTurn(Player player) {
-        this.currentPlayer = player;
-        this.camera.FocusPosition(player.go.transform.position);
+    void TakeTurn() {
+        currentPlayer++;
+        if(currentPlayer < players.Count) {
+            this.camera.FocusPosition(players[currentPlayer].go.transform.position);
+            this.playerUI.DisplayTurnMenu();
+        } else {
+            this.game.EndRound();
+        }
+
+    }
+
+    void EndMovement(Space space) {
+        switch(space.GetType()) {
+            case Space.SpaceType.EVENT:
+                this.eventManager.PickRandomEvent();
+                break;
+        }
     }
 
     void CameraMovementCheck() {
@@ -76,7 +88,7 @@ public class TurnManager {
     }
 
     List<List<Space>> FindPaths(int roll) {
-        Space currentSpace = this.currentPlayer.GetSpace();
+        Space currentSpace = this.players[currentPlayer].GetSpace();
         return FindPaths(currentSpace, roll, currentSpace,
             new List<Space>(), new SortedDictionary<string, bool>());
     }
@@ -125,7 +137,7 @@ public class TurnManager {
                 this.choosingSpace = false;
                 this.visuals.EndHighlight();
                 this.playerUI.ResetDiceDisplay();
-                this.currentPlayer.TraversePath(path);
+                this.players[currentPlayer].TraversePath(path, this.EndTurn);
             }
         }
     }
