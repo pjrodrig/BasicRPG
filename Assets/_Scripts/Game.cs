@@ -5,10 +5,16 @@ using System.Collections.Generic;
 
 public class Game : MonoBehaviour {
 
-	void Start() {
+    private User user;
 
-	}
+    void Start() {
 
+    }
+    
     void Update() {
+    }
+
+    public void SetUser(User user) {
+        this.user = user;
     }
 }
