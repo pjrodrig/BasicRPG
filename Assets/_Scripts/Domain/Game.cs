@@ -1,6 +1,10 @@
+using System;
+using System.Text;
+
+[Serializable]
 public class Game {
 
-    public int gameId;
+    public int id;
     public int turn;
     public int week;
     public int playerTurn;
@@ -8,14 +12,40 @@ public class Game {
     public Player[] players;
     public int mapId;
 
-    public Game(int gameId, int turn, int week, int playerTurn, int activePlayer, Player[] players, int mapId) {
-        this.gameId = gameId;
+    public Game(Player[] players) {
+        this.players = players;
+    }
+
+    public Game(int id, int turn, int week, int playerTurn, int activePlayer, Player[] players, int mapId) {
+        this.id = id;
         this.turn = turn;
         this.week = week;
         this.playerTurn = playerTurn;
         this.activePlayer = activePlayer;
         this.players = players;
         this.mapId = mapId;
+    }
+
+    public override string ToString() {
+        return 
+        "{ id: " + id + 
+        ", turn: " + turn + 
+        ", week: " + week + 
+        ", playerTurn: " + playerTurn + 
+        ", activePlayer: " + activePlayer +
+        ", players: " + GetPlayersString() +
+        ", mapId: " + mapId + " }";
+    }
+
+    string GetPlayersString() {
+        StringBuilder sb = new StringBuilder("[");
+        sb.Append(players[0].ToString());
+        for(int i = 1; i < players.Length; i++) {
+            sb.Append(", ");
+            sb.Append(players[i].ToString());
+        }
+        sb.Append("]");
+        return sb.ToString();
     }
 
 }

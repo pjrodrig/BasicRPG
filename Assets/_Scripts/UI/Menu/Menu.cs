@@ -43,7 +43,6 @@ public class Menu : MonoBehaviour {
 
     public void CompleteAuth(User user) {
         app.User = user;
-        auth.Deactivate();
         if (app.Game == null) {
             gameSelect.Activate();
         } else {

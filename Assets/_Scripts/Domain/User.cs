@@ -3,7 +3,7 @@ using System;
 [Serializable]
 public class User {
 
-    public Int16 id;
+    public int id;
     public string name;
 
     public User(string name) {
@@ -11,6 +11,8 @@ public class User {
     }
 
     public override string ToString() {
-        return "{id: " + this.id + ", name: " + this.name + "}";
+        return 
+        "{ id: " + this.id + 
+        ", name: " + this.name + " }";
     }
 }

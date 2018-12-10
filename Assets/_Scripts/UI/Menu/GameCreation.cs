@@ -110,9 +110,16 @@ public class GameCreation : MonoBehaviour {
     }
 
     void CreateGame(User[] users) {
-        foreach(User user in users) {
-            Debug.Log(user.ToString());
+        Player[] players = new Player[users.Length + 1];
+        for(int i = 0; i < users.Length; i++) {
+            players[i] = new Player(users[i].id);
         }
+        players[users.Length] = (new Player(app.User.id));
+        StartCoroutine(Rest.Post(API.game, null, new Game(players), new Action<Game>(delegate (Game game) {
+            gameSelect.CompleteGameCreation(game);
+        }), new Action<RestError>(delegate (RestError err) {
+            Debug.Log(err.message);
+        })));
     }
 
     string GetEncodedUsernames() {
@@ -127,4 +134,5 @@ public class GameCreation : MonoBehaviour {
         }
         return sb.ToString();
     }
+
 }

@@ -1,3 +1,6 @@
+using System;
+
+[Serializable]
 public class Player {
     public int userId;
     public string name;
@@ -7,9 +10,13 @@ public class Player {
     public Equipment equipment;
     public Stats stats;
 
-    public Player(int userId, string name, int gold) {
+    public Player(int userId) {
         this.userId = userId;
-        this.name = name;
-        this.gold = gold;
+    }
+
+    public override string ToString() {
+        return 
+        "{ userId: " + userId + 
+        ", name: " + name + " }";
     }
 }

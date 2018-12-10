@@ -45,6 +45,7 @@ public class Auth : MonoBehaviour {
     void Login() {
         if(username.text.Length > 0) {
             StartCoroutine(Rest.Get(API.user, "username=" + UnityWebRequest.EscapeURL(username.text), new Action<User>(delegate (User user) {
+                Deactivate();
                 menu.CompleteAuth(user);
             }), new Action<RestError>(delegate (RestError err) {
                 if(err.errorCode == 404) {
@@ -58,7 +59,8 @@ public class Auth : MonoBehaviour {
 
     void SignUp() {
         if(username.text.Length > 0) {
-            StartCoroutine(Rest.Post(API.user, "", new User(username.text), new Action<User>(delegate (User user) {
+            StartCoroutine(Rest.Post(API.user, null, new User(username.text), new Action<User>(delegate (User user) {
+                Deactivate();
                 menu.CompleteAuth(user);
             }), new Action<RestError>(delegate (RestError err) {
                 if(err.errorCode == 409) {

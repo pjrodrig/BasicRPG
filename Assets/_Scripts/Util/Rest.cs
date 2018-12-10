@@ -24,12 +24,11 @@ public static class Rest {
     /// </code>
     /// </example>
     public static IEnumerator Get<T>(string api, string queryParams, Action<T> resolve, Action<RestError> reject) {
-        UnityWebRequest request = UnityWebRequest.Get(baseUrl + api + "?" + queryParams);
+        UnityWebRequest request = UnityWebRequest.Get(baseUrl + api + (queryParams == null ? "" : "?" + queryParams));
         yield return request.SendWebRequest();
         if (request.isNetworkError || request.isHttpError){
             reject(new RestError((int) request.responseCode, request.downloadHandler.text));
         } else {
-            Debug.Log(request.downloadHandler.text);
             resolve(JsonUtility.FromJson<T>(request.downloadHandler.text));
         }
     }
@@ -52,7 +51,7 @@ public static class Rest {
     /// </code>
     /// </example>
     public static IEnumerator Post<T>(string api, string queryParams, System.Object body, Action<T> resolve, Action<RestError> reject) {
-        UnityWebRequest request = new UnityWebRequest(baseUrl + api + "?" + queryParams);
+        UnityWebRequest request = new UnityWebRequest(baseUrl + api + (queryParams == null ? "" : "?" + queryParams));
         request.SetRequestHeader("Content-Type", "application/json");
         request.method = "POST";
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(JsonUtility.ToJson(body)));
@@ -83,7 +82,7 @@ public static class Rest {
     /// </code>
     /// </example>
     public static IEnumerator Put<T>(string api, string queryParams, System.Object body, Action<T> resolve, Action<RestError> reject) {
-        UnityWebRequest request = new UnityWebRequest(baseUrl + api + "?" + queryParams);
+        UnityWebRequest request = new UnityWebRequest(baseUrl + api + (queryParams == null ? "" : "?" + queryParams));
         request.SetRequestHeader("Content-Type", "application/json");
         request.method = "PUT";
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(JsonUtility.ToJson(body)));
@@ -113,7 +112,7 @@ public static class Rest {
     /// </code>
     /// </example>
     public static IEnumerator Delete(string api, string queryParams, Action<bool> resolve, Action<RestError> reject) {
-        UnityWebRequest request = UnityWebRequest.Delete(baseUrl + api + "?" + queryParams);
+        UnityWebRequest request = UnityWebRequest.Delete(baseUrl + api + (queryParams == null ? "" : "?" + queryParams));
         yield return request.SendWebRequest();
         if (request.isNetworkError || request.isHttpError){
             reject(new RestError((int) request.responseCode, request.downloadHandler.text));

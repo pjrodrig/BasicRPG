@@ -59,9 +59,13 @@ public class GameSelect : MonoBehaviour {
         // }
     }
 
-    private void CreateGame() {
+    void CreateGame() {
         Deactivate();
         gameCreation.Activate();
+    }
+
+    public void CompleteGameCreation(Game game) {
+        menu.CompleteGameSelect(game);
     }
 
 }
