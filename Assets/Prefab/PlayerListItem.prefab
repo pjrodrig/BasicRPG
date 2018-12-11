@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 224770277778771452}
   - component: {fileID: 222415979122117060}
   - component: {fileID: 114793093383103230}
+  - component: {fileID: 114369490711786034}
   m_Layer: 0
   m_Name: PlayerListItem
   m_TagString: Untagged
@@ -95,6 +96,20 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Player Job
+--- !u!114 &114369490711786034
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1445898810959462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02738a8cfbb3c344db68186257e24501, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 114793093383103230}
+  playerName: {fileID: 114698151979827310}
+  playerJob: {fileID: 114201739655042810}
 --- !u!114 &114698151979827310
 MonoBehaviour:
   m_ObjectHideFlags: 1

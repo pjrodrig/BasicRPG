@@ -217,8 +217,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa852da51fc6c6a4bb29b2db74d19416, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  thisObj: {fileID: 0}
+  playerListItemPrefab: {fileID: 1445898810959462, guid: b8788244d5df62449a114337b8280877,
+    type: 2}
   gameId: {fileID: 114144961077901436}
   week: {fileID: 114399297143277868}
+  playerList: {fileID: 1994944144177750}
+  thisButton: {fileID: 114054004900802736}
 --- !u!114 &114547377558259070
 MonoBehaviour:
   m_ObjectHideFlags: 1

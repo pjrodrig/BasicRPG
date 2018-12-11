@@ -3640,7 +3640,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &485899640
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6374,8 +6374,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisObj: {fileID: 957300771}
+  gameList: {fileID: 923228364}
   createGame: {fileID: 1796866794}
   gameCreation: {fileID: 1488112661}
+  gameListItemPrefab: {fileID: 1025725798763260, guid: 30210f2c4d21836418a63b91866aedbb,
+    type: 2}
+  gameListItems: []
 --- !u!1 &963690018
 GameObject:
   m_ObjectHideFlags: 0
