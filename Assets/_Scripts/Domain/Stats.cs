@@ -1,3 +1,6 @@
+using System;
+
+[Serializable]
 public class Stats {
 
     public int hp;
@@ -5,4 +8,5 @@ public class Stats {
     public int atk;
     public int mag;
     public int spd;
+    
 }

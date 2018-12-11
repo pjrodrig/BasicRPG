@@ -24,6 +24,5 @@ public class App : MonoBehaviour {
 
     public void CompleteGameSelect() {
         menu.Deactivate();
-        Debug.Log(Game.ToString());
     }
 }

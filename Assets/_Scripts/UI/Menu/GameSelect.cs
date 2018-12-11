@@ -13,8 +13,11 @@ public class GameSelect : MonoBehaviour {
     Game[] games;
     
     public GameObject thisObj;
+    public GameObject gameList;
     public Button createGame;
     public GameCreation gameCreation;
+    public GameObject gameListItemPrefab;
+    public GameObject[] gameListItems;
 
     public void Init(App app, Menu menu) {
         this.app = app;
@@ -34,29 +37,43 @@ public class GameSelect : MonoBehaviour {
     public void Deactivate() {
         if(active) {
             thisObj.SetActive(false);
+            games = null;
+            if(gameListItems != null) {
+                foreach(GameObject gameListItem in gameListItems) {
+                    Destroy(gameListItem);
+                }
+            }
+            gameListItems = null;
             createGame.onClick.RemoveAllListeners();
             active = false;
         }
     }
 
     private void FetchGames() {
-        // games = new Game[5];
+        StartCoroutine(Rest.Get(API.userGames, "userId=" + app.User.id, new Action<GameCollection>(delegate (GameCollection games) {
+            this.games = games.games;
+            UpdateGamesList();
+        }), new Action<RestError>(delegate (RestError err) {
+            Debug.Log(err.message);
+        })));
+    }
 
-        // Player[] players = new Player[4];
-        // players[0] = new Player(0, "Paul", 100);
-        // players[1] = new Player(0, "Max", 100);
-        // players[2] = new Player(0, "Bryce", 100);
-        // players[3] = new Player(0, "Corey", 100);
-
-        // games[0] = new Game(1, 0, 0, 0, 0, players, 1);
-        // games[1] = new Game(2, 0, 0, 0, 0, players, 1);
-        // games[2] = new Game(3, 0, 0, 0, 0, players, 1);
-        // games[3] = new Game(4, 0, 0, 0, 0, players, 1);
-        // games[4] = new Game(5, 0, 0, 0, 0, players, 1);
-
-        // foreach (var game in games) {
-            
-        // }
+    void UpdateGamesList() {
+        Vector3 previous = createGame.transform.position;
+        gameListItems = new GameObject[games.Length];
+        int i = 0;
+        foreach(Game game in games) {
+            GameObject newGameListItem = Instantiate(gameListItemPrefab) as GameObject;
+            GameListItem gameListItem = newGameListItem.GetComponent<GameListItem>();
+            gameListItem.Init(game, new Action<Game>(delegate (Game selectedGame) {
+                Deactivate();
+                menu.CompleteGameSelect(game);
+            }));
+            newGameListItem.transform.SetParent(gameList.transform);
+            newGameListItem.transform.position = new Vector3(previous.x, previous.y - 110, previous.z);
+            previous = newGameListItem.transform.position;
+            gameListItems[i++] = newGameListItem;
+        }
     }
 
     void CreateGame() {
