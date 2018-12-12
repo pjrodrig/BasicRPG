@@ -5,7 +5,7 @@ using System.Collections;
 
 public static class Rest {
 
-    private static string baseUrl = "localhost:8000";
+    private static string baseUrl = "http://162.208.11.43:3333";
 
     ///<summary>
     /// GET request
