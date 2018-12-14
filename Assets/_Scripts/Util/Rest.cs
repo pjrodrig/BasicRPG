@@ -5,7 +5,7 @@ using System.Collections;
 
 public static class Rest {
 
-    private static string baseUrl = "http://162.208.11.43:3333";
+    private static string baseUrl = "https://162.208.11.43:3333";
 
     ///<summary>
     /// GET request
@@ -25,6 +25,7 @@ public static class Rest {
     /// </example>
     public static IEnumerator Get<T>(string api, string queryParams, Action<T> resolve, Action<RestError> reject) {
         UnityWebRequest request = UnityWebRequest.Get(baseUrl + api + (queryParams == null ? "" : "?" + queryParams));
+        request.certificateHandler = new RestCertificateHandler();
         yield return request.SendWebRequest();
         if (request.isNetworkError || request.isHttpError){
             reject(new RestError((int) request.responseCode, request.downloadHandler.text));
@@ -56,6 +57,7 @@ public static class Rest {
         request.method = "POST";
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(JsonUtility.ToJson(body)));
         request.downloadHandler = new DownloadHandlerBuffer();
+        request.certificateHandler = new RestCertificateHandler();
         yield return request.SendWebRequest();
         if (request.isNetworkError || request.isHttpError){
             reject(new RestError((int) request.responseCode, request.downloadHandler.text));
@@ -87,6 +89,7 @@ public static class Rest {
         request.method = "PUT";
         request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(JsonUtility.ToJson(body)));
         request.downloadHandler = new DownloadHandlerBuffer();
+        request.certificateHandler = new RestCertificateHandler();
         yield return request.SendWebRequest();
         if (request.isNetworkError || request.isHttpError){
             reject(new RestError((int) request.responseCode, request.downloadHandler.text));
@@ -113,6 +116,7 @@ public static class Rest {
     /// </example>
     public static IEnumerator Delete(string api, string queryParams, Action<bool> resolve, Action<RestError> reject) {
         UnityWebRequest request = UnityWebRequest.Delete(baseUrl + api + (queryParams == null ? "" : "?" + queryParams));
+        request.certificateHandler = new RestCertificateHandler();
         yield return request.SendWebRequest();
         if (request.isNetworkError || request.isHttpError){
             reject(new RestError((int) request.responseCode, request.downloadHandler.text));

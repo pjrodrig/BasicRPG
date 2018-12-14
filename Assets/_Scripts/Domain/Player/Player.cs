@@ -6,12 +6,12 @@ public class Player {
     public string username;
     public string name;
     public int gold;
-    public Clazz clazz;
+    public ClassProperties.ClassType clazz;
     public Appearance appearance;
     public Inventory inventory;
     public Equipment equipment;
     public Stats stats;
-    public Stats perLevelStats;
+    public bool isInitialized;
 
     public Player(int userId, string username) {
         this.userId = userId;

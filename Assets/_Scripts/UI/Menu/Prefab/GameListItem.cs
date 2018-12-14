@@ -19,17 +19,16 @@ public class GameListItem : MonoBehaviour {
         this.onClick = onClick;
         gameId.text = "Game: " + game.id;
         week.text = "Week: " + game.week;
-        Vector3 previous = new Vector3(
+        Vector2 previous = new Vector2(
             playerList.transform.position.x, 
-            playerList.transform.position.y + 38, 
-            playerList.transform.position.z
+            playerList.transform.position.y + 38
         );
         foreach(Player player in game.players) {
             GameObject newPlayerListItem = Instantiate(playerListItemPrefab) as GameObject;
             PlayerListItem playerListItem = newPlayerListItem.GetComponent<PlayerListItem>();
             playerListItem.Init(player);
-            newPlayerListItem.transform.SetParent(playerList.transform);
-            newPlayerListItem.transform.position = new Vector3(previous.x, previous.y - 18, previous.z);
+            newPlayerListItem.transform.SetParent(playerList.transform, false);
+            newPlayerListItem.transform.position = new Vector2(previous.x, previous.y - 18);
             previous = newPlayerListItem.transform.position;
         }
         thisButton.onClick.AddListener(SelectGame);

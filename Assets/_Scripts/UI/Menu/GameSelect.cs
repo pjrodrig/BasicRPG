@@ -59,8 +59,9 @@ public class GameSelect : MonoBehaviour {
     }
 
     void UpdateGamesList() {
-        Vector3 previous = createGame.transform.position;
+        Vector2 previous = createGame.transform.position;
         gameListItems = new GameObject[games.Length];
+        float scale = menu.GetScale();
         int i = 0;
         foreach(Game game in games) {
             GameObject newGameListItem = Instantiate(gameListItemPrefab) as GameObject;
@@ -69,8 +70,8 @@ public class GameSelect : MonoBehaviour {
                 Deactivate();
                 menu.CompleteGameSelect(game);
             }));
-            newGameListItem.transform.SetParent(gameList.transform);
-            newGameListItem.transform.position = new Vector3(previous.x, previous.y - 110, previous.z);
+            newGameListItem.transform.SetParent(gameList.transform, false);
+            newGameListItem.transform.position = new Vector2(previous.x, previous.y - (110 / scale));
             previous = newGameListItem.transform.position;
             gameListItems[i++] = newGameListItem;
         }

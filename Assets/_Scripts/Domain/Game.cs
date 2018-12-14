@@ -11,6 +11,7 @@ public class Game {
     public int activePlayer;
     public Player[] players;
     public int mapId;
+    public bool isStarted;
 
     public Game(Player[] players) {
         this.players = players;
