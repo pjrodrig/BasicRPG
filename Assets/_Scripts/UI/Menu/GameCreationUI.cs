@@ -4,10 +4,10 @@ using UnityEngine.Networking;
 using System;
 using System.Text;
 
-public class GameCreation : MonoBehaviour {
+public class GameCreationUI : MonoBehaviour {
 
     App app;
-    GameSelect gameSelect;
+    GameSelectUI gameSelect;
     bool active = false;
 
     public GameObject thisObj;
@@ -24,7 +24,7 @@ public class GameCreation : MonoBehaviour {
     public GameObject cannotInviteSelf;
     public GameObject cannotInviteTwice;
 
-    public void Init(App app, GameSelect gameSelect) {
+    public void Init(App app, GameSelectUI gameSelect) {
         this.app = app;
         this.gameSelect = gameSelect;
     }

@@ -12,6 +12,7 @@ public class Player {
     public Equipment equipment;
     public Stats stats;
     public bool isInitialized;
+    public PlayerModel PlayerModel {get;set;}
 
     public Player(int userId, string username) {
         this.userId = userId;

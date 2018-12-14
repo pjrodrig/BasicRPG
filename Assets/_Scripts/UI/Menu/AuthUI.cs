@@ -5,9 +5,9 @@ using System;
 using System.Collections;
 using System.Text.RegularExpressions;
 
-public class Auth : MonoBehaviour {
+public class AuthUI : MonoBehaviour {
 
-    Menu menu;
+    MenuUI menu;
     bool active = false;
     
     public GameObject thisObj;
@@ -17,7 +17,7 @@ public class Auth : MonoBehaviour {
     public GameObject usernameNotFound;
     public GameObject usernameAlreadyExists;
 
-    public void Init(Menu menu) {
+    public void Init(MenuUI menu) {
         this.menu = menu;
     }
 

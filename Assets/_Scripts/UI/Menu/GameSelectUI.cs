@@ -5,21 +5,21 @@ using System;
 using System.Collections;
 using System.Text.RegularExpressions;
 
-public class GameSelect : MonoBehaviour {
+public class GameSelectUI : MonoBehaviour {
 
     App app;
-    Menu menu;
+    MenuUI menu;
     bool active = false;
     Game[] games;
     
     public GameObject thisObj;
     public GameObject gameList;
     public Button createGame;
-    public GameCreation gameCreation;
+    public GameCreationUI gameCreation;
     public GameObject gameListItemPrefab;
     public GameObject[] gameListItems;
 
-    public void Init(App app, Menu menu) {
+    public void Init(App app, MenuUI menu) {
         this.app = app;
         this.menu = menu;
         this.gameCreation.Init(app, this);

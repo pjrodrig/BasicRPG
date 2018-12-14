@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class GameOptions : MonoBehaviour {
+public class GameOptionsUI : MonoBehaviour {
 
-    Menu menu;
+    MenuUI menu;
     bool active = false;
 
     public GameObject thisObj;
 
-    public void Init(Menu menu) {
+    public void Init(MenuUI menu) {
         this.menu = menu;
     }
 

@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-public class PlayerSetup : MonoBehaviour {
+public class PlayerSetupUI : MonoBehaviour {
 
     bool active;
-    Menu menu;
+    MenuUI menu;
     Game game;
     Player player;
 
@@ -31,7 +31,7 @@ public class PlayerSetup : MonoBehaviour {
     public Button doneButton;
 
 
-    public void Init(Menu menu) {
+    public void Init(MenuUI menu) {
         this.menu = menu;
     }
 

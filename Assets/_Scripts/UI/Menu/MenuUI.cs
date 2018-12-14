@@ -1,21 +1,23 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
+using System;
 using System.Text;
 
-public class Menu : MonoBehaviour {
+public class MenuUI : MonoBehaviour {
 
     App app;
     bool active;
     
     public GameObject thisObj;
     public CanvasScaler canvasScaler;
-    public Auth auth;
-    public GameSelect gameSelect;
-    public PlayerSetup playerSetup;
+    public AuthUI auth;
+    public GameSelectUI gameSelect;
+    public PlayerSetupUI playerSetup;
     public GameObject gameNotStarted;
     public Text waitingForPlayers;
     public Button returnToGameSelect;
-    public GameOptions gameOptions;
+    public GameOptionsUI gameOptions;
 
     public void Init(App app) {
         this.app = app;
@@ -59,8 +61,8 @@ public class Menu : MonoBehaviour {
         app.Game = game;
         if (game.isStarted) {
             Deactivate();
-            app.CompleteGameSelect();
-        } else { 
+            app.LoadGame();
+        } else {
             Player userPlayer = null;
             StringBuilder sb = new StringBuilder();
             foreach(Player player in game.players) {
@@ -81,8 +83,12 @@ public class Menu : MonoBehaviour {
                 gameNotStarted.SetActive(true);
                 returnToGameSelect.onClick.AddListener(ReturnToGameSelect);
             } else {
-                Deactivate();
-                app.CompleteGameSelect();
+                StartCoroutine(Rest.Put(API.game, null, game, new Action<Game>(delegate (Game updatedGame) {
+                    Deactivate();
+                    app.LoadGame();
+                }), new Action<RestError>(delegate (RestError err) {
+                    Debug.Log(err.message);
+                })));
             }
         }
     }
