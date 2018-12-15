@@ -5,7 +5,6 @@ public class GameTurnUI : MonoBehaviour {
 
     App app;
     bool active;
-    Player player;
     bool itemUsed;
     bool scrollUsed;
 
@@ -14,20 +13,19 @@ public class GameTurnUI : MonoBehaviour {
 
     public void Init(App app) {
         this.app = app;
-        turnOptions.Init(this);
+        turnOptions.Init(app, this);
     }
 
-    public void Activate(Player player) {
+    public void Activate() {
         if(!active) {
-            this.player = player;
             thisObject.SetActive(true);
+            turnOptions.Activate();
             active = true;
         }
     }
     
     public void Deactivate() {
         if(active) {
-            this.player = null;
             thisObject.SetActive(false);
             active = false;
         }

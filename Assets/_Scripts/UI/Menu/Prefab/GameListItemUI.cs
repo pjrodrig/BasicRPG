@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-public class GameListItem : MonoBehaviour {
+public class GameListItemUI : MonoBehaviour {
 
     Game game;
     Action<Game> onClick;
@@ -25,7 +25,7 @@ public class GameListItem : MonoBehaviour {
         );
         foreach(Player player in game.players) {
             GameObject newPlayerListItem = Instantiate(playerListItemPrefab) as GameObject;
-            PlayerListItem playerListItem = newPlayerListItem.GetComponent<PlayerListItem>();
+            PlayerListItemUI playerListItem = newPlayerListItem.GetComponent<PlayerListItemUI>();
             playerListItem.Init(player);
             newPlayerListItem.transform.SetParent(playerList.transform, false);
             newPlayerListItem.transform.position = new Vector2(previous.x, previous.y - 18);

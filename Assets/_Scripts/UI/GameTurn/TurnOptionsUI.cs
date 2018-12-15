@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class TurnOptionsUI : MonoBehaviour {
 
+    App app;
     GameTurnUI gameTurn;
     bool active;
     bool itemUsed;
@@ -18,7 +19,8 @@ public class TurnOptionsUI : MonoBehaviour {
     public Button inventoryButton;
     public Button playerDataButton;
 
-    public void Init(GameTurnUI gameTurn) {
+    public void Init(App app, GameTurnUI gameTurn) {
+        this.app = app;
         this.gameTurn = gameTurn;
         move.Init(this);
         search.Init(this);
@@ -26,11 +28,11 @@ public class TurnOptionsUI : MonoBehaviour {
         playerData.Init(this);
     }
 
-    public void Activate(Player player) {
+    public void Activate() {
         if(!active) {
             moveButton.onClick.AddListener(delegate () {
             Deactivate();
-            move.Activate(player);
+            move.Activate(app.ActivePlayer);
         });
         searchButton.onClick.AddListener(delegate () {
             Deactivate();
@@ -38,11 +40,11 @@ public class TurnOptionsUI : MonoBehaviour {
         });
         inventoryButton.onClick.AddListener(delegate () {
             Deactivate();
-            inventory.Activate(player.inventory, itemUsed, scrollUsed);
+            inventory.Activate(app.ActivePlayer.PlayerData.inventory, itemUsed, scrollUsed);
         });
         playerDataButton.onClick.AddListener(delegate () {
             Deactivate();
-            playerData.Activate(player);
+            playerData.Activate(app.ActivePlayer);
         });
             thisObject.SetActive(true);
             active = true;

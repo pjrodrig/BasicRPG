@@ -19,6 +19,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4246346668952644}
+  - component: {fileID: 114102191218300872}
   m_Layer: 0
   m_Name: Visuals
   m_TagString: Untagged
@@ -215,6 +216,19 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1605024847998676}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114102191218300872
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1195346028083300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dca0c80124e7e72408500dd481463ec0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spaceHighlight: {fileID: 1605024847998676}
+  spacePointer: {fileID: 1599588358157298}
 --- !u!136 &136666779976448332
 CapsuleCollider:
   m_ObjectHideFlags: 1

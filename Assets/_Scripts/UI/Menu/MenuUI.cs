@@ -67,7 +67,7 @@ public class MenuUI : MonoBehaviour {
             StringBuilder sb = new StringBuilder();
             foreach(Player player in game.players) {
                 if(!player.isInitialized) {
-                    if(player.userId == app.User.id) {
+                    if(player.id == app.User.id) {
                         userPlayer = player;
                         break;
                     } else {

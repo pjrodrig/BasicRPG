@@ -128,7 +128,7 @@ public class PlayerSetupUI : MonoBehaviour {
 
     void Done() {
         player.name = nameInput.text;
-        player.clazz = (ClassProperties.ClassType) classDropdown.value;
+        player.clazz = new Clazz[]{new Warrior(), new Mage(), new Assassin()}[classDropdown.value];
         player.appearance.sex = (Appearance.Sex) sexDropdown.value;
         player.isInitialized = true;
         StartCoroutine(Rest.Put(API.game, null, game, new Action<Game>(delegate (Game game) {

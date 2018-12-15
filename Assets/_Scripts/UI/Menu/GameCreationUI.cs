@@ -111,6 +111,7 @@ public class GameCreationUI : MonoBehaviour {
 
     void CreateGame(User[] users) {
         Player[] players = new Player[users.Length + 1];
+        PlayerData[] playerData = new PlayerData[users.Length + 1];
         for(int i = 0; i < users.Length; i++) {
             players[i] = new Player(users[i].id, users[i].name);
         }

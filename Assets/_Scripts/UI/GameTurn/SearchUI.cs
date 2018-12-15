@@ -6,6 +6,7 @@ public class SearchUI : MonoBehaviour {
     bool active;
 
     public GameObject thisObject;
+    public CameraModel gameCamera;
 
     public void Init(TurnOptionsUI turnOptions) {
         this.turnOptions = turnOptions;
@@ -14,6 +15,8 @@ public class SearchUI : MonoBehaviour {
     public void Activate() {
         if(!active) {
             thisObject.SetActive(true);
+            gameCamera.ZoomOutToMap();
+            gameCamera.Locked = false;
             active = true;
         }
     }

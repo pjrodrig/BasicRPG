@@ -2,10 +2,13 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class Space {
+
+    public readonly string id;
     public readonly Vector3 position;
     public readonly List<Edge> edges = new List<Edge>();
 
-    public Space(Vector3 position) {
+    public Space(string id, Vector3 position) {
+        this.id = id;
         this.position = position;
     }
 

@@ -65,7 +65,7 @@ public class GameSelectUI : MonoBehaviour {
         int i = 0;
         foreach(Game game in games) {
             GameObject newGameListItem = Instantiate(gameListItemPrefab) as GameObject;
-            GameListItem gameListItem = newGameListItem.GetComponent<GameListItem>();
+            GameListItemUI gameListItem = newGameListItem.GetComponent<GameListItemUI>();
             gameListItem.Init(game, new Action<Game>(delegate (Game selectedGame) {
                 Deactivate();
                 menu.CompleteGameSelect(game);

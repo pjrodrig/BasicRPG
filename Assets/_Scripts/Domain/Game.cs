@@ -10,7 +10,6 @@ public class Game {
     public int playerTurn;
     public int activePlayer;
     public Player[] players;
-    public int mapId;
     public bool isStarted;
 
     public Game(Player[] players) {
@@ -24,7 +23,6 @@ public class Game {
         this.playerTurn = playerTurn;
         this.activePlayer = activePlayer;
         this.players = players;
-        this.mapId = mapId;
     }
 
     public override string ToString() {
@@ -34,8 +32,7 @@ public class Game {
         ", week: " + week + 
         ", playerTurn: " + playerTurn + 
         ", activePlayer: " + activePlayer +
-        ", players: " + GetPlayersString() +
-        ", mapId: " + mapId + " }";
+        ", players: " + GetPlayersString() + " }";
     }
 
     string GetPlayersString() {

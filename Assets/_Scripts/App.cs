@@ -7,12 +7,13 @@ public class App : MonoBehaviour {
 
     public MenuUI menu;
     public GameTurnUI gameTurn;
+    public CameraModel gameCamera;
     public User User {get;set;}
     public Game Game {get;set;}
-    public GameMap GameMap {get;set;}
-    public Player activePlayer;
+    public Player ActivePlayer;
 
     void Start() {
+        gameCamera.Locked = true;
         InitClasses();
         InitGame();
     }
@@ -31,17 +32,23 @@ public class App : MonoBehaviour {
     }
 
     void InitPlayers() {
-        foreach(Player player in Game.players) {
-            player.PlayerModel = new PlayerModel();
-        }
+        // foreach(Player player in Game.players) {
+        //     player.PlayerModel = new PlayerModel();
+        // }
     }
 
     void ContinueGame() {
-        activePlayer = Game.players[Game.activePlayer];
-        if(activePlayer.userId == User.id) {
-            gameTurn.Activate(activePlayer);
-        } else {
-            //Either start polling, or wait for a push notification
+        foreach(Player player in Game.players) {
+            if(player.id == User.id) {
+                ActivePlayer = player;
+                break;
+            }
         }
+        // ActivePlayer = Game.players[Game.activePlayer];
+        // if(ActivePlayer.userId == User.id) {
+            gameTurn.Activate();
+        // } else {
+        //     //Either start polling, or wait for a push notification
+        // }
     }
 }

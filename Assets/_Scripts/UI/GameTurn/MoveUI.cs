@@ -15,6 +15,7 @@ public class MoveUI : MonoBehaviour {
     SortedDictionary<string, List<Space>> pathOptions;
 
     public GameObject thisObject;
+    public CameraModel gameCamera;
     public GameObject rollBox;
     public Text roll;
     public GameObject rollCornerPos;
@@ -52,7 +53,7 @@ public class MoveUI : MonoBehaviour {
         });
         back.onClick.AddListener(delegate () {
             Deactivate();
-            turnOptions.Activate(player);
+            turnOptions.Activate();
         });
         buttons.SetActive(true);
     }
@@ -104,5 +105,21 @@ public class MoveUI : MonoBehaviour {
         }
         spaceVisuals.HighlightSpaces(toHighlight);
         choosingSpace = true;
+    }
+
+    void SpaceClickCheck() {
+        if (Input.GetMouseButtonDown(0)){
+            Ray ray = this.gameCamera.thisObj.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit)){
+                List<Space> path;
+                Vector3 hitPos = hit.transform.position;
+                pathOptions.TryGetValue(hitPos.x + "_" + hitPos.z, out path);
+                choosingSpace = false;
+                spaceVisuals.EndHighlight();
+                // playerUI.ResetDiceDisplay();
+                // currentPlayer.TraversePath(path);
+            }
+        }
     }
 }

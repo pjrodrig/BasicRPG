@@ -1,28 +1,42 @@
+using UnityEngine;
 using System;
 
 [Serializable]
-public class Player {
-    public int userId;
+public class Player : ISerializationCallbackReceiver {
+    public int id;
     public string username;
     public string name;
-    public int gold;
-    public ClassProperties.ClassType clazz;
+    [NonSerialized]
+    public Clazz clazz;
+    public Type classType;
     public Appearance appearance;
-    public Inventory inventory;
-    public Equipment equipment;
-    public Stats stats;
     public bool isInitialized;
+    public PlayerData PlayerData {get;set;}
     public PlayerModel PlayerModel {get;set;}
 
-    public Player(int userId, string username) {
-        this.userId = userId;
+    public Player(int id, string username) {
+        this.id = id;
         this.username = username;
+        this.appearance = new Appearance();
     }
 
     public override string ToString() {
         return 
-        "{ userId: " + userId + 
+        "{ userId: " + id + 
         ", username: " + username + 
         ", name: " + name + " }";
     }
+
+    public void OnBeforeSerialize() {
+        if(clazz != null) {
+            classType = clazz.GetType();
+        }
+    }
+
+    public void OnAfterDeserialize() {
+        if(classType != null) {
+            clazz = (Clazz) Activator.CreateInstance(classType);
+        }
+    }
+
 }
