@@ -30,7 +30,7 @@ public class PlayerModel : MonoBehaviour {
 
     //TODO: break up this method
     IEnumerator Walk(List<Space> path, CameraModel camera, Action<Space> callback) {
-        // playerCamera.FocusPosition(space.position);
+        camera.FocusPosition(space.position);
         Vector3 offset = new Vector3(0, 0.2F, 0);
         Vector3 startPos = Vector3.zero;
         Vector3 endPos;
@@ -52,7 +52,7 @@ public class PlayerModel : MonoBehaviour {
                 while(fracComplete < 1) {
                     fracComplete = (Time.time - startTime) / speed;
                     thisObject.transform.position = Vector3.Lerp(startPos, endPos, fracComplete);
-                    // playerCamera.FocusPosition(go.transform.position);
+                    camera.FocusPosition(thisObject.transform.position);
                     yield return new WaitForSeconds(0.00001F);
                 }
             }

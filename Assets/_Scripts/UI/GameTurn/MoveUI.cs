@@ -30,6 +30,7 @@ public class MoveUI : MonoBehaviour {
 
     public void Init(App app, GameTurnUI gameTurn, TurnOptionsUI turnOptions) {
         this.app = app;
+        this.gameTurn = gameTurn;
         this.turnOptions = turnOptions;
     }
 
