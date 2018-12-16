@@ -26,6 +26,7 @@ sysinfo.txt
 *.user
 *.userprefs
 *.pidb
+.vscode/
 .DS_Store
 
 ###
@@ -41,3 +42,5 @@ ehthumbs.db
 Thumbs.db
 
 .vs/
+
+*.apk

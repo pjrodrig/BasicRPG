@@ -31,7 +31,6 @@ public class LocationUtil {
     }
 
     public static IEnumerator SlerpVector(Transform transform, Vector3 endPos, float milliseconds) {
-        Debug.Log("start: " + Time.time);
         Vector3 startPos = transform.position;
         float startTime = Time.time;
         float fracComplete = 0;
@@ -40,7 +39,6 @@ public class LocationUtil {
             transform.position = Vector3.Slerp(startPos, endPos, fracComplete);
             yield return new WaitForSeconds(WAIT_CONSTANT);
         }
-        Debug.Log("end: " + Time.time);
     }
 
 }
