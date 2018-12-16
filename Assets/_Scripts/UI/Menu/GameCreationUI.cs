@@ -111,12 +111,13 @@ public class GameCreationUI : MonoBehaviour {
 
     void CreateGame(User[] users) {
         Player[] players = new Player[users.Length + 1];
-        PlayerData[] playerData = new PlayerData[users.Length + 1];
         for(int i = 0; i < users.Length; i++) {
             players[i] = new Player(users[i].id, users[i].name);
         }
         players[users.Length] = (new Player(app.User.id, app.User.name));
         StartCoroutine(Rest.Post(API.game, null, new Game(players), new Action<Game>(delegate (Game game) {
+            Deactivate();
+            Debug.Log(game.ToString());
             gameSelect.CompleteGameCreation(game);
         }), new Action<RestError>(delegate (RestError err) {
             Debug.Log(err.message);

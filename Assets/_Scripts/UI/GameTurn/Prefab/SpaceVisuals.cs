@@ -14,7 +14,6 @@ public class SpaceVisuals : MonoBehaviour {
         Quaternion rotation = new Quaternion(0, 0, 0, 0);
         Vector3 highlightOffset = new Vector3(0, -0.2F, 0);
         Vector3 pointerOffset = new Vector3(0, 7F, 0);
-        Vector3 pos;
         foreach(Vector3 space in spaces) {
             StartCoroutine(SpaceHighlightPulse(Instantiate(this.spaceHighlight, space + highlightOffset, rotation)));
             StartCoroutine(SpacePointerBob(Instantiate(this.spacePointer, space + pointerOffset, rotation)));

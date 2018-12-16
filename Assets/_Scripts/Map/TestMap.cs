@@ -1,18 +1,20 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
-public class TestMap {
+public class TestMap : MonoBehaviour {
+    
+    List<Edge> edges;
+    SortedDictionary<string, Space> spaces;
+    Space start;
 
-    private List<Edge> edges;
-    private SortedDictionary<string, Space> spaces;
-    private Space start;
+    public GameObject spacesObject;
 
-    public TestMap(GameObject spacesObject) {
-        initSpaces(spacesObject);
+    public void Init() {
+        initSpaces();
         initEdges();
     }
 
-    void initSpaces(GameObject spacesObject) {
+    void initSpaces() {
         this.spaces = new SortedDictionary<string, Space>();
         string[] stringSpaces = new string[]{
             "s10_5", "s10_7", "s11_7", "s11_8", "s12_2", "s12_3", "s12_5", "s13_3",

@@ -10,7 +10,6 @@ public class GameSelectUI : MonoBehaviour {
     App app;
     MenuUI menu;
     bool active = false;
-    Game[] games;
     
     public GameObject thisObj;
     public GameObject gameList;
@@ -37,7 +36,6 @@ public class GameSelectUI : MonoBehaviour {
     public void Deactivate() {
         if(active) {
             thisObj.SetActive(false);
-            games = null;
             if(gameListItems != null) {
                 foreach(GameObject gameListItem in gameListItems) {
                     Destroy(gameListItem);
@@ -51,14 +49,13 @@ public class GameSelectUI : MonoBehaviour {
 
     private void FetchGames() {
         StartCoroutine(Rest.Get(API.userGames, "userId=" + app.User.id, new Action<GameCollection>(delegate (GameCollection games) {
-            this.games = games.games;
-            UpdateGamesList();
+            UpdateGamesList(games.games);
         }), new Action<RestError>(delegate (RestError err) {
             Debug.Log(err.message);
         })));
     }
 
-    void UpdateGamesList() {
+    void UpdateGamesList(Game[] games) {
         Vector2 previous = createGame.transform.position;
         gameListItems = new GameObject[games.Length];
         float scale = menu.GetScale();

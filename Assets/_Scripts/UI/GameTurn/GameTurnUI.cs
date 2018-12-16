@@ -30,4 +30,22 @@ public class GameTurnUI : MonoBehaviour {
             active = false;
         }
     }
+
+    public void GetSpaceEvent(Space space) {
+        switch(space.type) {
+            case Space.Type.EVENT:
+                StartEvent();
+                break;
+            case Space.Type.ITEM_SHOP:
+                break;
+            case Space.Type.MAGIC_SHOP:
+                break;
+            case Space.Type.WEAPON_SHOP:
+                break;
+        }
+    }
+
+    void StartEvent() {
+        
+    }
 }

@@ -25,8 +25,8 @@ public class PlayerData : ISerializationCallbackReceiver {
     }
 
     public void OnBeforeSerialize() {
-        classLevelsMatrix = new object[classLevels.Keys.Count][];
         if(classLevels != null) {
+            classLevelsMatrix = new object[classLevels.Keys.Count][];
             int i = 0;
             foreach(KeyValuePair<string, int> classLevel in classLevels) {
                 classLevelsMatrix[i++] = new object[]{classLevel.Key, classLevel.Value};

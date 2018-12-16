@@ -7,12 +7,15 @@ public class MoveUI : MonoBehaviour {
 
     readonly float ROLL_TRANSITION_TIME = 0.5F;
 
+    App app;
+    GameTurnUI gameTurn;
     TurnOptionsUI turnOptions;
     Vector3 initialRollPosition;
     bool active;
     bool rolling;
     bool choosingSpace;
     SortedDictionary<string, List<Space>> pathOptions;
+    Vector3 mouseDownPos;
 
     public GameObject thisObject;
     public CameraModel gameCamera;
@@ -24,15 +27,27 @@ public class MoveUI : MonoBehaviour {
     public Button back;
     public SpaceVisuals spaceVisuals;
 
-    public void Init(TurnOptionsUI turnOptions) {
+
+    public void Init(App app, GameTurnUI gameTurn, TurnOptionsUI turnOptions) {
+        this.app = app;
         this.turnOptions = turnOptions;
     }
 
-    public void Activate(Player player) {
+    public void Update() {
+        if(choosingSpace) {
+            SpaceClickCheck();
+        }
+    }
+
+    public void Activate() {
         if(!active) {
-            roll.transform.position = initialRollPosition;
+            if(initialRollPosition == Vector3.zero) {
+                initialRollPosition = roll.transform.position;
+            } else {
+                roll.transform.position = initialRollPosition;
+            }
             choosingSpace = false;
-            ActivateButtons(player);
+            ActivateButtons();
             thisObject.SetActive(true);
             active = true;
             StartCoroutine(StartRoll());
@@ -47,9 +62,9 @@ public class MoveUI : MonoBehaviour {
         }
     }
 
-    void ActivateButtons(Player player) {
+    void ActivateButtons() {
         stop.onClick.AddListener(delegate () {
-            StopRoll(player);
+            StopRoll();
         });
         back.onClick.AddListener(delegate () {
             Deactivate();
@@ -77,24 +92,24 @@ public class MoveUI : MonoBehaviour {
         }
     }
 
-    void StopRoll(Player player) {
+    void StopRoll() {
         rolling = false;
         int finalRoll = (int)Mathf.Floor(UnityEngine.Random.value * 6) + 1;
-        roll.text = roll + "";
+        roll.text = finalRoll + "";
         DeactivateButtons();
-        StartCoroutine(Transition(finalRoll, player));
+        StartCoroutine(Transition(finalRoll));
     }
 
-    IEnumerator Transition(int finalRoll, Player player) {
+    IEnumerator Transition(int finalRoll) {
         yield return new WaitForSeconds(1F);
         Vector3 startPos = this.rollBox.transform.position;
         Vector3 endPos = rollCornerPos.transform.position;
         yield return LocationUtil.SlerpVector(this.rollBox.transform, endPos, ROLL_TRANSITION_TIME);
-        DisplayChoices(finalRoll, player);
+        DisplayChoices(finalRoll);
     }
 
-    public void DisplayChoices(int roll, Player player) {
-        List<List<Space>> paths = MapUtil.FindPaths(roll, player);
+    public void DisplayChoices(int roll) {
+        List<List<Space>> paths = MapUtil.FindPaths(roll, app.ActivePlayer);
         pathOptions = new SortedDictionary<string, List<Space>>();
         List<Vector3> toHighlight = new List<Vector3>();
         Vector3 pos;
@@ -104,12 +119,14 @@ public class MoveUI : MonoBehaviour {
             pathOptions.Add(pos.x + "_" + pos.z, path);
         }
         spaceVisuals.HighlightSpaces(toHighlight);
+        gameCamera.ZoomOutToMap();
+        gameCamera.Locked = false;
         choosingSpace = true;
     }
 
     void SpaceClickCheck() {
-        if (Input.GetMouseButtonDown(0)){
-            Ray ray = this.gameCamera.thisObj.ScreenPointToRay(Input.mousePosition);
+        if (Input.GetMouseButtonUp(0) && mouseDownPos == Input.mousePosition){
+            Ray ray = this.gameCamera.thisObj.ScreenPointToRay(mouseDownPos);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit)){
                 List<Space> path;
@@ -117,9 +134,12 @@ public class MoveUI : MonoBehaviour {
                 pathOptions.TryGetValue(hitPos.x + "_" + hitPos.z, out path);
                 choosingSpace = false;
                 spaceVisuals.EndHighlight();
-                // playerUI.ResetDiceDisplay();
-                // currentPlayer.TraversePath(path);
+                mouseDownPos = Vector3.zero;
+                app.ActivePlayer.PlayerModel.TraversePath(path, gameCamera, gameTurn.GetSpaceEvent);
+                Deactivate();
             }
+        } else if(Input.GetMouseButtonDown(0)) {
+            mouseDownPos = Input.mousePosition;
         }
     }
 }

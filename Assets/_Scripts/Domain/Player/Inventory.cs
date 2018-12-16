@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 
 [Serializable]
@@ -9,8 +10,8 @@ public class Inventory : ISerializationCallbackReceiver {
     public List<Item> items;
     [NonSerialized]
     public List<Scroll> scrolls;
-    public Type[] itemTypes;
-    public Type[] scrollTypes;
+    public string[] itemTypes;
+    public string[] scrollTypes;
 
     public Inventory() {
         items = new List<Item>(8);
@@ -18,29 +19,29 @@ public class Inventory : ISerializationCallbackReceiver {
     }
 
     public void OnBeforeSerialize() {
-        itemTypes = new Type[items.Count];
+        itemTypes = new string[items.Count];
         int i = 0;
         foreach(Item item in items) {
-            itemTypes[i++] = item.GetType();
+            itemTypes[i++] = item.GetType().ToString();
         }
         i = 0;
-        scrollTypes = new Type[scrolls.Count];
+        scrollTypes = new string[scrolls.Count];
         foreach(Scroll scroll in scrolls) {
-            scrollTypes[i++] = scroll.GetType();
+            scrollTypes[i++] = scroll.GetType().ToString();
         }
     }
 
     public void OnAfterDeserialize() {
         items = new List<Item>(8);
         if(itemTypes != null) {
-            foreach(Type type in itemTypes) {
-                items.Add((Item) Activator.CreateInstance(type));
+            foreach(string type in itemTypes) {
+                items.Add((Item) Activator.CreateInstance(Assembly.GetExecutingAssembly().GetType(type)));
             }
         }
         scrolls = new List<Scroll>(8);
         if(scrollTypes != null) {
-            foreach(Type type in scrollTypes) {
-                scrolls.Add((Scroll) Activator.CreateInstance(type));
+            foreach(string type in scrollTypes) {
+                scrolls.Add((Scroll) Activator.CreateInstance(Assembly.GetExecutingAssembly().GetType(type)));
             }
         }
     }

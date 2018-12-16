@@ -37,10 +37,12 @@ public class Game {
 
     string GetPlayersString() {
         StringBuilder sb = new StringBuilder("[");
-        sb.Append(players[0].ToString());
-        for(int i = 1; i < players.Length; i++) {
-            sb.Append(", ");
-            sb.Append(players[i].ToString());
+        if(players != null) {
+            sb.Append(players[0].ToString());
+            for(int i = 1; i < players.Length; i++) {
+                sb.Append(", ");
+                sb.Append(players[i].ToString());
+            }
         }
         sb.Append("]");
         return sb.ToString();

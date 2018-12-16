@@ -55,7 +55,7 @@ public class CameraModel : MonoBehaviour {
         StartCoroutine(FocusMap());
     }
 
-    public IEnumerator FocusMap() {
+    private IEnumerator FocusMap() {
         Vector3 startPos = thisObj.transform.position;
         Vector3 endPos = new Vector3(0, 10, -10) + startPos;
         float startTime = Time.time;
