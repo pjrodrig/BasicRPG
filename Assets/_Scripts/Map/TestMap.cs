@@ -10,12 +10,11 @@ public class TestMap : MonoBehaviour {
     public GameObject spacesObject;
 
     public void Init() {
-        initSpaces();
-        initEdges();
-        initSpaceTypes();
+        InitSpaces();
+        InitEdges();
     }
 
-    void initSpaces() {
+    void InitSpaces() {
         this.spaces = new SortedDictionary<string, Space>();
         string[] stringSpaces = {
             "s10_5", "s10_7", "s11_7", "s11_8", "s12_2", "s12_3", "s12_5", "s13_3",
@@ -28,7 +27,7 @@ public class TestMap : MonoBehaviour {
         this.spaces.TryGetValue("s14_1", out this.start);
     }
 
-    void initEdges() {
+    void InitEdges() {
         string[,] edges = {
             {"s10_5", "s10_7"}, {"s10_5", "s12_5"}, {"s10_7", "s11_7"}, {"s11_7", "s11_8"}, 
             {"s11_8", "s13_8"}, {"s12_2", "s12_3"}, {"s12_2","s14_2"}, {"s12_3", "s12_5"},
