@@ -5,7 +5,7 @@ public class InventoryOptionsUI : MonoBehaviour {
     Inventory inventory;
     bool active;
 
-    public GameObject thisObject;
+    public GameObject thisObj;
 
     public void Init(Inventory inventory) {
         this.inventory = inventory;
@@ -13,14 +13,14 @@ public class InventoryOptionsUI : MonoBehaviour {
 
     public void Activate(Player player) {
         if(!active) {
-            thisObject.SetActive(true);
+            thisObj.SetActive(true);
             active = true;
         }
     }
     
     public void Deactivate() {
         if(active) {
-            thisObject.SetActive(false);
+            thisObj.SetActive(false);
             active = false;
         }
     }

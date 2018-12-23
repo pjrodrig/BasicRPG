@@ -24,7 +24,7 @@ public class MenuUI : MonoBehaviour {
         auth.Init(this);
         gameSelect.Init(app, this);
         playerSetup.Init(this);
-        gameOptions.Init(this);
+        gameOptions.Init(app, gameSelect, auth, this);
     }
     
     public void Activate() {
@@ -78,17 +78,10 @@ public class MenuUI : MonoBehaviour {
             }
             if(userPlayer != null) {
                 playerSetup.Activate(game, userPlayer);
-            } else if(sb.Length > 0) {
+            } else {
                 waitingForPlayers.text = sb.ToString();
                 gameNotStarted.SetActive(true);
                 returnToGameSelect.onClick.AddListener(ReturnToGameSelect);
-            } else {
-                StartCoroutine(Rest.Put(API.game, null, game, new Action<Game>(delegate (Game updatedGame) {
-                    Deactivate();
-                    app.LoadGame();
-                }), new Action<RestError>(delegate (RestError err) {
-                    Debug.Log(err.message);
-                })));
             }
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Collections.Generic;
 
 [Serializable]
 public class Game {
@@ -11,6 +12,9 @@ public class Game {
     public int activePlayer;
     public Player[] players;
     public bool isStarted;
+    public long lastUpdated;
+    public long created;
+    public List<Battle> battles;
 
     public Game(Player[] players) {
         this.players = players;
@@ -28,6 +32,7 @@ public class Game {
     public override string ToString() {
         return 
         "{ id: " + id + 
+        ", isStarted: " + isStarted + 
         ", turn: " + turn + 
         ", week: " + week + 
         ", playerTurn: " + playerTurn + 

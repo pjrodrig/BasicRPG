@@ -6,7 +6,7 @@ public class SearchUI : MonoBehaviour {
     TurnOptionsUI turnOptions;
     bool active;
 
-    public GameObject thisObject;
+    public GameObject thisObj;
     public CameraModel gameCamera;
     public Button back;
 
@@ -16,7 +16,7 @@ public class SearchUI : MonoBehaviour {
 
     public void Activate(Vector3 playerPos) {
         if(!active) {
-            thisObject.SetActive(true);
+            thisObj.SetActive(true);
             gameCamera.ZoomOutToMap();
             gameCamera.Locked = false;
             back.onClick.AddListener(delegate () {
@@ -29,7 +29,7 @@ public class SearchUI : MonoBehaviour {
     
     public void Deactivate(Vector3 playerPos) {
         if(active) {
-            thisObject.SetActive(false);
+            thisObj.SetActive(false);
             back.onClick.RemoveAllListeners();
             gameCamera.FocusPosition(playerPos);
             gameCamera.Locked = true;

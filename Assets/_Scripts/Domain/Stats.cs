@@ -16,5 +16,17 @@ public class Stats {
         mag = 1;
         spd = 1;
     }
+
+    public Stats(int atk, int mag, int def, int spd, int hp) {
+        this.atk = atk;
+        this.mag = mag;
+        this.def = def;
+        this.spd = spd;
+        this.hp = hp;
+    }
+
+    public Stats copy() {
+        return new Stats(atk, mag, def, spd, hp);
+    }
     
 }

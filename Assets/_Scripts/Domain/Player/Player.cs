@@ -3,7 +3,7 @@ using System;
 using System.Reflection;
 
 [Serializable]
-public class Player : ISerializationCallbackReceiver {
+public class Player : BattleParticipant, ISerializationCallbackReceiver {
     public int id;
     public string username;
     public string name;
@@ -39,6 +39,14 @@ public class Player : ISerializationCallbackReceiver {
         if(classType != null && classType != "") {
             clazz = (Clazz) Activator.CreateInstance(Assembly.GetExecutingAssembly().GetType(classType));
         }
+    }
+
+    public override Stats GetStats() {
+        return playerData.getBattleStats();
+    }
+
+    public override Stats GetCurrentStats() {
+        return playerData.getCurrentStats();
     }
 
 }

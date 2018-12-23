@@ -5,7 +5,7 @@ public class PlayerDataUI : MonoBehaviour {
     TurnOptionsUI turnOptions;
     bool active;
 
-    public GameObject thisObject;
+    public GameObject thisObj;
 
     public void Init(TurnOptionsUI turnOptions) {
         this.turnOptions = turnOptions;
@@ -13,14 +13,14 @@ public class PlayerDataUI : MonoBehaviour {
 
     public void Activate(Player player) {
         if(!active) {
-            thisObject.SetActive(true);
+            thisObj.SetActive(true);
             active = true;
         }
     }
     
     public void Deactivate() {
         if(active) {
-            thisObject.SetActive(false);
+            thisObj.SetActive(false);
             active = false;
         }
     }

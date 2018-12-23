@@ -4,12 +4,11 @@ using UnityEngine.UI;
 public class TurnOptionsUI : MonoBehaviour {
 
     App app;
-    GameTurnUI gameTurn;
     bool active;
     bool itemUsed;
     bool scrollUsed;
 
-    public GameObject thisObject;
+    public GameObject thisObj;
     public MoveUI move;
     public SearchUI search;
     public InventoryUI inventory;
@@ -19,10 +18,9 @@ public class TurnOptionsUI : MonoBehaviour {
     public Button inventoryButton;
     public Button playerDataButton;
 
-    public void Init(App app, GameTurnUI gameTurn) {
+    public void Init(App app, GameTurnUI gameTurn, GameTurn2UI gameTurn2) {
         this.app = app;
-        this.gameTurn = gameTurn;
-        move.Init(app, gameTurn, this);
+        move.Init(app, gameTurn, gameTurn2, this);
         search.Init(this);
         inventory.Init(this);
         playerData.Init(this);
@@ -36,7 +34,7 @@ public class TurnOptionsUI : MonoBehaviour {
             });
             searchButton.onClick.AddListener(delegate () {
                 Deactivate();
-                search.Activate(app.ActivePlayer.PlayerModel.thisObject.transform.position);
+                search.Activate(app.ActivePlayer.PlayerModel.thisObj.transform.position);
             });
             inventoryButton.onClick.AddListener(delegate () {
                 Deactivate();
@@ -46,7 +44,7 @@ public class TurnOptionsUI : MonoBehaviour {
                 Deactivate();
                 playerData.Activate(app.ActivePlayer);
             });
-            thisObject.SetActive(true);
+            thisObj.SetActive(true);
             active = true;
         }
     }
@@ -57,7 +55,7 @@ public class TurnOptionsUI : MonoBehaviour {
             searchButton.onClick.RemoveAllListeners();
             inventoryButton.onClick.RemoveAllListeners();
             playerDataButton.onClick.RemoveAllListeners();
-            thisObject.SetActive(false);
+            thisObj.SetActive(false);
             active = false;
         }
     }

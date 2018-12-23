@@ -8,17 +8,17 @@ public class GameTurnUI : MonoBehaviour {
     bool itemUsed;
     bool scrollUsed;
 
-    public GameObject thisObject;
+    public GameObject thisObj;
     public TurnOptionsUI turnOptions;
 
-    public void Init(App app) {
+    public void Init(App app, GameTurn2UI gameTurn2) {
         this.app = app;
-        turnOptions.Init(app, this);
+        turnOptions.Init(app, this, gameTurn2);
     }
 
     public void Activate() {
         if(!active) {
-            thisObject.SetActive(true);
+            thisObj.SetActive(true);
             turnOptions.Activate();
             active = true;
         }
@@ -26,26 +26,9 @@ public class GameTurnUI : MonoBehaviour {
     
     public void Deactivate() {
         if(active) {
-            thisObject.SetActive(false);
+            thisObj.SetActive(false);
             active = false;
         }
     }
 
-    public void GetSpaceEvent(Space space) {
-        switch(space.type) {
-            case Space.Type.EVENT:
-                StartEvent();
-                break;
-            case Space.Type.ITEM_SHOP:
-                break;
-            case Space.Type.MAGIC_SHOP:
-                break;
-            case Space.Type.WEAPON_SHOP:
-                break;
-        }
-    }
-
-    void StartEvent() {
-        
-    }
 }

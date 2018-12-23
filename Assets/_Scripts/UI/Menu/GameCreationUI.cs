@@ -18,11 +18,11 @@ public class GameCreationUI : MonoBehaviour {
     public GameObject playerInvite2GO;
     public GameObject playerInvite3GO;
     public Button sendInvites;
-
     public Text usersDoNotExist;
     public GameObject usersDoNotExistObj;
     public GameObject cannotInviteSelf;
     public GameObject cannotInviteTwice;
+    public Button back;
 
     public void Init(App app, GameSelectUI gameSelect) {
         this.app = app;
@@ -34,7 +34,11 @@ public class GameCreationUI : MonoBehaviour {
             thisObj.SetActive(true);
             playersDropdown.onValueChanged.AddListener(delegate {UpdateInviteList();});
             sendInvites.onClick.AddListener(FetchUsers);
+            back.onClick.AddListener(Back);
             ClearErrorMessages();
+            playerInvite1.text = "";
+            playerInvite2.text = "";
+            playerInvite3.text = "";
             UpdateInviteList();
             active = true;
         }
@@ -47,6 +51,11 @@ public class GameCreationUI : MonoBehaviour {
             sendInvites.onClick.RemoveAllListeners();
             active = false;
         }
+    }
+
+    void Back() {
+        Deactivate();
+        gameSelect.Activate();
     }
 
     void ClearErrorMessages() {
@@ -117,7 +126,6 @@ public class GameCreationUI : MonoBehaviour {
         players[users.Length] = (new Player(app.User.id, app.User.name));
         StartCoroutine(Rest.Post(API.game, null, new Game(players), new Action<Game>(delegate (Game game) {
             Deactivate();
-            Debug.Log(game.ToString());
             gameSelect.CompleteGameCreation(game);
         }), new Action<RestError>(delegate (RestError err) {
             Debug.Log(err.message);

@@ -58,6 +58,7 @@ public class PlayerSetupUI : MonoBehaviour {
     void ActivateInputs() {
         doneButton.interactable = false;
         nameInput.text = "";
+        nameInput.onValueChanged.AddListener(delegate (string val) {CheckEnableDone();});
         ActivateColors();
         sexDropdown.value = 0;
         ActivateSkin();
@@ -130,10 +131,11 @@ public class PlayerSetupUI : MonoBehaviour {
         player.name = nameInput.text;
         player.clazz = new Clazz[]{new Warrior(), new Mage(), new Assassin()}[classDropdown.value];
         player.appearance.sex = (Appearance.Sex) sexDropdown.value;
+        player.playerData = new PlayerData(player.id);
         player.isInitialized = true;
-        StartCoroutine(Rest.Put(API.game, null, game, new Action<Game>(delegate (Game game) {
+        StartCoroutine(Rest.Put(API.player, "gameId=" + game.id, player, new Action<Game>(delegate (Game updatedGame) {
             Deactivate();
-            menu.CompleteGameSelect(game);
+            menu.CompleteGameSelect(updatedGame);
         }), new Action<RestError>(delegate (RestError err) {
             Debug.Log(err.message);
         })));

@@ -5,7 +5,7 @@ public class InventoryUI : MonoBehaviour {
     TurnOptionsUI turnOptions;
     bool active;
 
-    public GameObject thisObject;
+    public GameObject thisObj;
 
     public void Init(TurnOptionsUI turnOptions) {
         this.turnOptions = turnOptions;
@@ -13,14 +13,14 @@ public class InventoryUI : MonoBehaviour {
 
     public void Activate(Inventory inventory, bool itemUsed, bool scrollUsed) {
         if(!active) {
-            thisObject.SetActive(true);
+            thisObj.SetActive(true);
             active = true;
         }
     }
     
     public void Deactivate() {
         if(active) {
-            thisObject.SetActive(false);
+            thisObj.SetActive(false);
             active = false;
         }
     }

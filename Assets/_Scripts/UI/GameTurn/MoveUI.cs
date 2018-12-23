@@ -9,6 +9,7 @@ public class MoveUI : MonoBehaviour {
 
     App app;
     GameTurnUI gameTurn;
+    GameTurn2UI gameTurn2;
     TurnOptionsUI turnOptions;
     Vector3 initialRollPosition;
     bool active;
@@ -17,7 +18,7 @@ public class MoveUI : MonoBehaviour {
     SortedDictionary<string, List<Space>> pathOptions;
     Vector3 mouseDownPos;
 
-    public GameObject thisObject;
+    public GameObject thisObj;
     public CameraModel gameCamera;
     public GameObject rollBox;
     public Text roll;
@@ -28,9 +29,10 @@ public class MoveUI : MonoBehaviour {
     public SpaceVisuals spaceVisuals;
 
 
-    public void Init(App app, GameTurnUI gameTurn, TurnOptionsUI turnOptions) {
+    public void Init(App app, GameTurnUI gameTurn, GameTurn2UI gameTurn2, TurnOptionsUI turnOptions) {
         this.app = app;
         this.gameTurn = gameTurn;
+        this.gameTurn2 = gameTurn2;
         this.turnOptions = turnOptions;
     }
 
@@ -42,22 +44,22 @@ public class MoveUI : MonoBehaviour {
 
     public void Activate() {
         if(!active) {
+            thisObj.SetActive(true);
             if(initialRollPosition == Vector3.zero) {
-                initialRollPosition = roll.transform.position;
+                initialRollPosition = rollBox.transform.position;
             } else {
-                roll.transform.position = initialRollPosition;
+                rollBox.transform.position = initialRollPosition;
             }
             choosingSpace = false;
             ActivateButtons();
-            thisObject.SetActive(true);
-            active = true;
             StartCoroutine(StartRoll());
+            active = true;
         }
     }
     
     public void Deactivate() {
         if(active) {
-            thisObject.SetActive(false);
+            thisObj.SetActive(false);
             rolling = false;
             active = false;
         }
@@ -136,8 +138,9 @@ public class MoveUI : MonoBehaviour {
                 choosingSpace = false;
                 spaceVisuals.EndHighlight();
                 mouseDownPos = Vector3.zero;
-                app.ActivePlayer.PlayerModel.TraversePath(path, gameCamera, gameTurn.GetSpaceEvent);
+                app.ActivePlayer.PlayerModel.TraversePath(path, gameCamera, gameTurn2.Activate);
                 Deactivate();
+                gameTurn.Deactivate();
             }
         } else if(Input.GetMouseButtonDown(0)) {
             mouseDownPos = Input.mousePosition;
