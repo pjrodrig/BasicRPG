@@ -12,6 +12,7 @@ public class TestMap : MonoBehaviour {
     public void Init() {
         InitSpaces();
         InitEdges();
+        InitSpaceTypes();
     }
 
     void InitSpaces() {
@@ -22,7 +23,7 @@ public class TestMap : MonoBehaviour {
             "s16_4", "s16_5", "s16_7", "s16_8", "s16_10", "s18_5", "s18_6", "s18_7"
         };
         foreach(string stringSpace in stringSpaces) {
-            this.spaces.Add(stringSpace, new Space(stringSpace, spacesObject.transform.Find(stringSpace).position));
+            this.spaces.Add(stringSpace, new Space(stringSpace, spacesObject.transform.Find(stringSpace).position, 1));
         }
         this.spaces.TryGetValue("s14_1", out this.start);
     }
@@ -44,6 +45,20 @@ public class TestMap : MonoBehaviour {
             this.spaces.TryGetValue(edges[i, 0], out a);
             this.spaces.TryGetValue(edges[i, 1], out b);
             this.edges.Add(new Edge(a, b));
+        }
+    }
+
+    void InitSpaceTypes() {
+        object[,] types = {
+            {"s12_3", Space.Type.ITEM},
+            {"s14_3", Space.Type.SCROLL},
+            {"s16_4", Space.Type.SHIELD},
+            {"s16_7", Space.Type.WEAPON}
+        };
+        Space space;
+        for(int i = 0; i < types.GetLength(0); i++) {
+            this.spaces.TryGetValue((string) types[i, 0], out space);
+            space.type = (Space.Type) types[i, 1];
         }
     }
 

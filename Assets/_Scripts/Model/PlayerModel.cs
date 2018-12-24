@@ -7,12 +7,15 @@ public class PlayerModel : MonoBehaviour {
 
     private readonly Quaternion TO_CAMERA = Quaternion.LookRotation(Vector3.back);
 
+    PlayerData playerData;
+
     public GameObject thisObj;
 
     private Space space;
 
-    public void Init(Space space) {
+    public void Init(Space space, PlayerData playerData) {
         this.space = space;
+        this.playerData = playerData;
         thisObj.transform.position = space.position;
     }
 
@@ -60,6 +63,7 @@ public class PlayerModel : MonoBehaviour {
         }
         StartCoroutine(LocationUtil.RotateToDirection(thisObj.transform, TO_CAMERA, 3F));
         space = path[path.Count - 1];
+        playerData.space = space.id;
         callback();
     }
 

@@ -18,6 +18,22 @@ public class Inventory : ISerializationCallbackReceiver {
         scrolls = new List<Scroll>(8);
     }
 
+    public void AddItem(Item item) {
+        if(items.Count == 8) {
+
+        } else {
+            items.Add(item);
+        }
+    }
+
+    public void AddScroll(Scroll scroll) {
+        if(scrolls.Count == 8) {
+
+        } else {
+            scrolls.Add(scroll);
+        }
+    }
+
     public void OnBeforeSerialize() {
         itemTypes = new string[items.Count];
         int i = 0;

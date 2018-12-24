@@ -7,13 +7,17 @@ public class GameTurn2UI : MonoBehaviour {
     bool active;
     bool itemUsed;
     bool scrollUsed;
+    TestMap testMap;
 
     public GameObject thisObj;
     public BattleUI battle;
+    public ItemSpinnerUI itemSpinner;
 
-    public void Init(App app) {
+    public void Init(App app, TestMap testMap) {
         this.app = app;
+        this.testMap = testMap;
         battle.Init(app, this);
+        itemSpinner.Init(this);
     }
 
     public void Activate() {
@@ -36,7 +40,7 @@ public class GameTurn2UI : MonoBehaviour {
                     }
                 }
             } else {
-                GetSpaceEvent(new Space("", Vector3.one));
+                GetSpaceEvent(testMap.GetSpace(app.ActivePlayer.playerData.space));
             }
             active = true;
         }
@@ -59,6 +63,18 @@ public class GameTurn2UI : MonoBehaviour {
             case Space.Type.MAGIC_SHOP:
                 break;
             case Space.Type.WEAPON_SHOP:
+                break;
+            case Space.Type.ITEM:
+                itemSpinner.Activate(ItemPool.GetItemPool(space.level), app.ActivePlayer.playerData.inventory);
+                break;
+            case Space.Type.SCROLL:
+                itemSpinner.Activate(ItemPool.GetItemPool(space.level), app.ActivePlayer.playerData.inventory);
+                break;
+            case Space.Type.WEAPON:
+                itemSpinner.Activate(ItemPool.GetItemPool(space.level), app.ActivePlayer.playerData.inventory);
+                break;
+            case Space.Type.SHIELD:
+                itemSpinner.Activate(ItemPool.GetItemPool(space.level), app.ActivePlayer.playerData.inventory);
                 break;
         }
     }

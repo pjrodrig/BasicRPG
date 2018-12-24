@@ -32,7 +32,7 @@ public class App : MonoBehaviour {
     void InitClasses() {
         menu.Init(this);
         gameTurn.Init(this, gameTurn2);
-        gameTurn2.Init(this);
+        gameTurn2.Init(this, testMap);
         testMap.Init();
     }
 
@@ -68,7 +68,7 @@ public class App : MonoBehaviour {
             } else {
                 space = testMap.GetStart();
             }
-            playerModel.Init(space);
+            playerModel.Init(space, player.playerData);
             player.PlayerModel = playerModel;
             playerModels[i++] = playerModel;
         }
