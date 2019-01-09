@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -17,6 +18,8 @@ public class MoveUI : MonoBehaviour {
     bool choosingSpace;
     SortedDictionary<string, List<Space>> pathOptions;
     Vector3 mouseDownPos;
+    MovementModifier mod;
+    Action modCallback;
 
     public GameObject thisObj;
     public CameraModel gameCamera;
@@ -27,6 +30,7 @@ public class MoveUI : MonoBehaviour {
     public Button stop;
     public Button back;
     public SpaceVisuals spaceVisuals;
+    public Text multiply;
 
 
     public void Init(App app, GameTurnUI gameTurn, GameTurn2UI gameTurn2, TurnOptionsUI turnOptions) {
@@ -42,9 +46,11 @@ public class MoveUI : MonoBehaviour {
         }
     }
 
-    public void Activate() {
+    public void Activate(MovementModifier mod, Action modCallback) {
         if(!active) {
             thisObj.SetActive(true);
+            this.mod = mod;
+            this.modCallback = modCallback;
             if(initialRollPosition == Vector3.zero) {
                 initialRollPosition = rollBox.transform.position;
             } else {
@@ -60,6 +66,7 @@ public class MoveUI : MonoBehaviour {
     public void Deactivate() {
         if(active) {
             thisObj.SetActive(false);
+            mod = null;
             rolling = false;
             active = false;
         }
@@ -86,11 +93,20 @@ public class MoveUI : MonoBehaviour {
         float last = 0;
         float randomNumber;
         rolling = true;
-        while(rolling) {
-            while(rolling && (randomNumber = Mathf.Floor(UnityEngine.Random.value * 6) + 1) != last) {
-                last = randomNumber;
-                this.roll.text = randomNumber + "";
-                yield return new WaitForSeconds(0.05F);
+        int max = 6;
+        if (mod is MovementSetter) {
+            modCallback();
+            StartCoroutine(Transition(((MovementSetter)mod).GetValue()));
+        } else {
+            if(mod is MovementDie) {
+                max = ((MovementDie) mod).GetDie();
+            }
+            while(rolling) {
+                while(rolling && (randomNumber = Mathf.Floor(UnityEngine.Random.value * max) + 1) != last) {
+                    last = randomNumber;
+                    roll.text = randomNumber + "";
+                    yield return new WaitForSeconds(0.05F);
+                }
             }
         }
     }
@@ -100,14 +116,41 @@ public class MoveUI : MonoBehaviour {
         int finalRoll = (int)Mathf.Floor(UnityEngine.Random.value * 6) + 1;
         roll.text = finalRoll + "";
         DeactivateButtons();
+        if(mod is MovementMultiplier) {
+            StartCoroutine(Multiply(finalRoll, ((MovementMultiplier)mod).GetMultiplier()));
+        } else {
+            StartCoroutine(Transition(finalRoll));
+        }
+        if(mod != null) {
+            modCallback();
+        }
+    }
+
+    IEnumerator Multiply(int finalRoll, int multiple) {
+        Color color;
+        multiply.text = "x" + multiple;
+        for(int i = 0; i <= 10; i++) {
+            color = multiply.color;
+            color.a = i/10F;
+            multiply.color = color;
+            yield return new WaitForSeconds(0.1F);
+        }
+        finalRoll = finalRoll * multiple;
+        roll.text = finalRoll + "";
+        for(int i = 10; i >= 0; i--) {
+            color = multiply.color;
+            color.a = i/10F;
+            multiply.color = color;
+            yield return new WaitForSeconds(0.1F);
+        }
         StartCoroutine(Transition(finalRoll));
     }
 
     IEnumerator Transition(int finalRoll) {
         yield return new WaitForSeconds(1F);
-        Vector3 startPos = this.rollBox.transform.position;
+        Vector3 startPos = rollBox.transform.position;
         Vector3 endPos = rollCornerPos.transform.position;
-        yield return LocationUtil.SlerpVector(this.rollBox.transform, endPos, ROLL_TRANSITION_TIME);
+        yield return LocationUtil.SlerpVector(rollBox.transform, endPos, ROLL_TRANSITION_TIME);
         DisplayChoices(finalRoll);
     }
 
@@ -129,7 +172,7 @@ public class MoveUI : MonoBehaviour {
 
     void SpaceClickCheck() {
         if (Input.GetMouseButtonUp(0) && mouseDownPos == Input.mousePosition){
-            Ray ray = this.gameCamera.thisObj.ScreenPointToRay(mouseDownPos);
+            Ray ray = gameCamera.thisObj.ScreenPointToRay(mouseDownPos);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit)){
                 List<Space> path;

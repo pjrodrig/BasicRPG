@@ -22,7 +22,7 @@ public class TurnOptionsUI : MonoBehaviour {
         this.app = app;
         move.Init(app, gameTurn, gameTurn2, this);
         search.Init(this);
-        inventory.Init(this);
+        inventory.Init(this, move);
         playerData.Init(this);
     }
 
@@ -30,7 +30,7 @@ public class TurnOptionsUI : MonoBehaviour {
         if(!active) {
             moveButton.onClick.AddListener(delegate () {
                 Deactivate();
-                move.Activate();
+                move.Activate(null, null);
             });
             searchButton.onClick.AddListener(delegate () {
                 Deactivate();
@@ -38,7 +38,7 @@ public class TurnOptionsUI : MonoBehaviour {
             });
             inventoryButton.onClick.AddListener(delegate () {
                 Deactivate();
-                inventory.Activate(app.ActivePlayer.playerData.inventory, itemUsed, scrollUsed);
+                inventory.Activate(app.ActivePlayer, itemUsed, scrollUsed);
             });
             playerDataButton.onClick.AddListener(delegate () {
                 Deactivate();
@@ -58,5 +58,9 @@ public class TurnOptionsUI : MonoBehaviour {
             thisObj.SetActive(false);
             active = false;
         }
+    }
+
+    public void ItemUsed() {
+        Activate();
     }
 }

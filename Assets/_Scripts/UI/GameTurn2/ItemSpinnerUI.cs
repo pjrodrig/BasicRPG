@@ -11,7 +11,7 @@ public class ItemSpinnerUI : MonoBehaviour {
     bool spinning;
     int slow;
     Quaternion rotation;
-    Thing[] things;
+    InventoryObject[] inventoryObjects;
 
     public GameObject thisObj;
     public Button stop;
@@ -58,14 +58,14 @@ public class ItemSpinnerUI : MonoBehaviour {
     }
 
     void PopulateSlots(string[] thingStrings) {
-        things = new Thing[8];
+        inventoryObjects = new InventoryObject[8];
         Text[] slots = {slot1Text, slot2Text, slot3Text, slot4Text, slot5Text, slot6Text, slot7Text, slot8Text};
         int random;
-        Thing thing;
+        InventoryObject thing;
         for(int i = 0; i < 8; i++) {
             random = (int)Math.Floor(UnityEngine.Random.value * thingStrings.Length);
-            thing = (Thing) Activator.CreateInstance(Assembly.GetExecutingAssembly().GetType(thingStrings[random]));
-            things[i] = thing;
+            thing = (InventoryObject) Activator.CreateInstance(Assembly.GetExecutingAssembly().GetType(thingStrings[random]));
+            inventoryObjects[i] = thing;
             slots[i].text = thing.GetName();
         }
     }
@@ -134,10 +134,10 @@ public class ItemSpinnerUI : MonoBehaviour {
     }
 
     void AddThing(Inventory inventory, int slot) {
-        Thing thing = things[slot];
-        if(thing is Item) {
-            inventory.AddItem((Item) thing);
-        } else if(thing is Scroll) {
+        InventoryObject inventoryObject = inventoryObjects[slot];
+        if(inventoryObject is Item) {
+            inventory.AddItem((Item) inventoryObject);
+        } else if(inventoryObject is Scroll) {
 
         } 
         // else if(thing is Weapon) {
